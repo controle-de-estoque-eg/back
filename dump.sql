@@ -48,7 +48,13 @@ CREATE TABLE venda_formas_pagamento (
 CREATE TABLE clientes (
   id SERIAL PRIMARY KEY,
   nome VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL UNIQUE
+  email VARCHAR(255) NOT NULL UNIQUE,
+  cep varchar(9),
+  rua varchar(255),
+  numero integer,
+  bairro varchar(255),
+  cidade varchar(255),
+  estado varchar(255)
 );
 
 CREATE TABLE usuarios (
