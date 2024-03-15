@@ -5,8 +5,6 @@ const senhaJwt = process.env.SENHA_JWT;
 
 const login = async (req, res) => {
     const { email, senha } = req.body;
-    console.log(req);
-
     try {
         const usuarioComRole = await knex('usuarios')
             .select('usuarios.*', 'roles.nome as role_nome')
@@ -17,7 +15,7 @@ const login = async (req, res) => {
         if (!usuarioComRole) {
             return res.status(404).json({ mensagem: 'Esse email não esta cadastrado no sistema' });
         }
-        
+
 
         const senhaCorreta = await bcrypt.compare(senha, usuarioComRole.senha);
 

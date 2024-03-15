@@ -24,7 +24,6 @@ CREATE TABLE fornecedores (
   documento INT ,
   create_at TIMESTAMP NOT NULL,
   delete_at TIMESTAMP ,
-  update_at TIMESTAMP ,
   soft_delete BOOLEAN default false
 );
 
@@ -63,6 +62,9 @@ CREATE TABLE clientes (
   bairro varchar(255),
   cidade varchar(255),
   estado varchar(255),
+  create_at TIMESTAMP NOT NULL,
+  delete_at TIMESTAMP ,
+  update_at TIMESTAMP ,
   soft_delete BOOLEAN default false
 );
 
@@ -130,7 +132,10 @@ CREATE TABLE produtos_fornecedores (
   id serial primary key,
   produto_id INT REFERENCES produtos(id),
   fornecedor_id INT REFERENCES fornecedores(id),
-  soft_delete BOOLEAN default false
+  soft_delete BOOLEAN default false,
+  create_at TIMESTAMP NOT NULL,
+  delete_at TIMESTAMP ,
+  update_at TIMESTAMP 
 );
 
 alter table produtos add constraint fk_fornecedor_id foreign key (fornecedor_id) references produtos_fornecedores(id);
