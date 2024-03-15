@@ -78,6 +78,9 @@ CREATE TABLE usuarios (
   soft_delete BOOLEAN default false
 );
 
+insert into usuarios (email,senha) 
+values('adm@hotmail.com',"adm123")
+
 CREATE TABLE vendas (
   id serial primary key,
   cliente_id INT NOT NULL REFERENCES clientes(id),
