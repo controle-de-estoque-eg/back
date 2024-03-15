@@ -9,7 +9,7 @@ const listarUsuarios = async (req, res) => {
             res.status(200).json(usuarios)
         )
     } catch (error) {
-        return res.status(500).json({ mensagem: error.detail })
+        return res.status(500).json({ mensagem: error.message })
     }
 }
 
@@ -28,7 +28,7 @@ const listarUsuario = async (req, res) => {
             res.status(200).json(usuario)
         )
     } catch (error) {
-        return res.status(500).json({ mensagem: error.detail })
+        return res.status(500).json({ mensagem: error.message })
     }
 }
 
@@ -70,7 +70,7 @@ const cadastrarUsuario = async (req, res) => {
 
         return res.status(201).send(usuarioCadastrado);
     } catch (error) {
-        return res.status(500).json({ mensagem: error.detail });
+        return res.status(500).json({ mensagem: error.message });
     }
 };
 
@@ -114,7 +114,7 @@ const editararUsuario = async (req, res) => {
 
         return res.status(201).json(usuarioCadastrado);
     } catch (error) {
-        return res.status(500).json({ mensagem: error.detail });
+        return res.status(500).json({ mensagem: error.message });
     }
 };
 
@@ -137,7 +137,7 @@ const excluirUsuario = async (req, res) => {
         return res.status(204).json()
 
     } catch (error) {
-        return res.status(400).json({ mensagem: error.detail })
+        return res.status(400).json({ mensagem: error.message })
     }
 }
 

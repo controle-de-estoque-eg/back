@@ -13,7 +13,7 @@ CREATE TABLE categorias (
   create_at TIMESTAMP NOT NULL,
   delete_at TIMESTAMP ,
   update_at TIMESTAMP,
- soft_delete BOOLEAN default false
+  soft_delete BOOLEAN default false
 );
 
 CREATE TABLE fornecedores (

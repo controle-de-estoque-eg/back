@@ -8,7 +8,7 @@ const cadatroRotes = async (req, res) => {
             res.status(200).json(roles)
         )
     } catch (error) {
-        return res.status(500).json({ mensagem: error.detail })
+        return res.status(500).json({ mensagem: error.message })
     }
 }
 
@@ -20,7 +20,7 @@ const listarRotes = async (req, res) => {
             res.status(200).json(roles)
         )
     } catch (error) {
-        return res.status(500).json({ mensagem: error.detail })
+        return res.status(500).json({ mensagem: error.message })
     }
 }
 
@@ -44,7 +44,7 @@ const deleteRotes = async (req, res) => {
             })
         )
     } catch (error) {
-        return res.status(500).json({ mensagem: error.detail })
+        return res.status(500).json({ mensagem: error.message })
     }
 }
 

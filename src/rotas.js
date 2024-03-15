@@ -13,6 +13,9 @@ const { listarUsuarios, listarUsuario, cadastrarUsuario, editararUsuario, exclui
 //login
 const login = require("./Controladores/login")
 
+//Categorias
+const { listarCategorias, listarCategoria, cadastrarCategoria, editararCategoria, excluirCategoria } = require("./Controladores/categoria")
+
 //---------------------------Rotas--------------------------------------
 
 //Rotas-Roles
@@ -34,5 +37,13 @@ rotas.get('/usuario', listarUsuarios)
 rotas.get('/usuario/:id', listarUsuario)
 rotas.put('/usuario/:id', editararUsuario)
 rotas.delete('/usuario/:id', excluirUsuario)
+
+//Rotas-Categorias
+rotas.post('/categoria', cadastrarCategoria)
+rotas.get('/categoria', listarCategorias)
+rotas.get('/categoria/:id', listarCategoria)
+rotas.put('/categoria/:id', editararCategoria)
+rotas.delete('/categoria/:id', excluirCategoria)
+
 
 module.exports = rotas

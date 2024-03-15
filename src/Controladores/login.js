@@ -13,7 +13,7 @@ const login = async (req, res) => {
             .first();
 
         if (!usuarioComRole) {
-            return res.status(404).json({ mensagem: 'Esse email não esta cadastrado no sistema' });
+            return res.status(409).json({ mensagem: 'Esse email não esta cadastrado no sistema' });
         }
 
         const senhaCorreta = await bcrypt.compare(senha, usuarioComRole.senha);
@@ -25,7 +25,7 @@ const login = async (req, res) => {
 
         return res.status(200).json({ token });
     } catch (error) {
-        return res.status(500).json({ mensagem: error.detail });
+        return res.status(500).json({ mensagem: error.message });
     }
 };
 

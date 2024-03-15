@@ -26,7 +26,7 @@ const autenticacao = async (req, res, next) => {
         req.usuario = usuario
         next()
     } catch (error) {
-        return res.status(500).json({ mensagem: error.detail });
+        return res.status(500).json({ mensagem: error.message });
     }
 }
 
