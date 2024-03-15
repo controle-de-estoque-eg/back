@@ -8,7 +8,7 @@ const login = async (req, res) => {
     try {
         const usuarioComRole = await knex('usuarios')
             .select('usuarios.*', 'roles.nome as role_nome')
-            .where({ email })
+            .where({ 'usuarios.email': email, 'usuarios.soft_delete': false })
             .join('roles', 'usuarios.role_id', '=', 'roles.id')
             .first();
 

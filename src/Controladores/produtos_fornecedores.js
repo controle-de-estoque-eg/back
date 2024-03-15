@@ -4,7 +4,7 @@ const { DateTime } = require('luxon');
 const cadastraProdutos_Fornecedores = async (req, res) => {
     const { lista_produtos, fornecedor_id } = req.body;
     try {
-        const fornecedor = await knex('fornecedores').where({ id: fornecedor_id }).first();
+        const fornecedor = await knex('fornecedores').where({ id: fornecedor_id, soft_delete: false }).first();
 
         if (!fornecedor) {
             return res.status(404).json({ mensagem: 'O fornecedor informado não existe.' });
@@ -74,7 +74,7 @@ const exlcuirProdutos_Fornecedores = async (req, res) => {
     const { lista_produtos } = req.body;
     const { id } = req.params
     try {
-        const fornecedor = await knex('fornecedores').where({ id: fornecedor_id }).first();
+        const fornecedor = await knex('fornecedores').where({ id: fornecedor_id, soft_delete: false }).first();
 
         if (!fornecedor) {
             return res.status(404).json({ mensagem: 'O fornecedor informado não existe.' });

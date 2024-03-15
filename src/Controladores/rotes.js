@@ -15,7 +15,7 @@ const cadatroRotes = async (req, res) => {
 const listarRotes = async (req, res) => {
 
     try {
-        const roles = await knex("roles")
+        const roles = await knex("roles").where({ soft_delete: false })
         return (
             res.status(200).json(roles)
         )
@@ -27,7 +27,7 @@ const listarRotes = async (req, res) => {
 const deleteRotes = async (req, res) => {
     const { id } = req.params;
     try {
-        const roles = await knex("roles").where({ id }).first()
+        const roles = await knex("roles").where({ id, soft_delete: false }).first()
 
         if (!roles) {
             return res.status(409).json({

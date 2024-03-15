@@ -5,7 +5,7 @@ const cadastrarcliente = async (req, res) => {
     const dados = { ...req.body }
     const { email, cpf } = dados
     try {
-        const emailExistente = await knex('clientes').where({ email }).first();
+        const emailExistente = await knex('clientes').where({ email, soft_delete: false }).first();
 
         if (emailExistente) {
             return res.status(409).json({
@@ -13,7 +13,7 @@ const cadastrarcliente = async (req, res) => {
                     'O e-mail informado já está sendo utilizado por outro cliente.',
             });
         }
-        const cpfExistente = await knex('clientes').where({ cpf }).first();
+        const cpfExistente = await knex('clientes').where({ cpf, soft_delete: false }).first();
         if (cpfExistente) {
             return res.status(409).json({
                 mensagem:
@@ -30,7 +30,7 @@ const cadastrarcliente = async (req, res) => {
 
 const listarclientes = async (req, res) => {
     try {
-        const clientes = await knex('clientes')
+        const clientes = await knex('clientes').where({ soft_delete: false })
 
         return (
             res.status(200).json(clientes)
@@ -42,7 +42,7 @@ const listarclientes = async (req, res) => {
 const listarcliente = async (req, res) => {
     const { id } = req.params
     try {
-        const cliente = await knex("clientes").where({ id }).first()
+        const cliente = await knex("clientes").where({ id, soft_delete: false }).first()
         if (!cliente) {
             return res.status(409).json({
                 mensagem:
@@ -61,14 +61,14 @@ const editararcliente = async (req, res) => {
     const dados = { ...req.body }
     const { email, cpf } = dados
     try {
-        const cliente = await knex('clientes').where({ id }).first();
+        const cliente = await knex('clientes').where({ id, soft_delete: false }).first();
 
         if (!cliente) {
             return res.status(404).json({ mensagem: 'Cliente não encontrado' });
         }
 
         if (email) {
-            const emailExistente = await knex('clientes').where({ email }).first();
+            const emailExistente = await knex('clientes').where({ email, soft_delete: false }).first();
 
             if (emailExistente && emailExistente.id != id) {
                 return res.status(409).json({
@@ -79,7 +79,7 @@ const editararcliente = async (req, res) => {
         }
 
         if (cpf) {
-            const cpfExistente = await knex('clientes').where({ cpf }).first();
+            const cpfExistente = await knex('clientes').where({ cpf, soft_delete: false }).first();
 
             if (cpfExistente && cpfExistente.id != id) {
                 return res.status(400).json({

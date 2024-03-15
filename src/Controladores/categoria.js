@@ -3,7 +3,7 @@ const { DateTime } = require('luxon');
 
 const listarCategorias = async (req, res) => {
     try {
-        const categorias = await knex('categorias')
+        const categorias = await knex('categorias').where({ soft_delete: false })
         return (
             res.status(200).json(categorias)
         )
@@ -15,7 +15,7 @@ const listarCategorias = async (req, res) => {
 const listarCategoria = async (req, res) => {
     const { id } = req.params
     try {
-        const categoria = await knex("categorias").where({ id }).first()
+        const categoria = await knex("categorias").where({ id, soft_delete: false }).first()
         if (!categoria) {
             return res.status(409).json({
                 mensagem:

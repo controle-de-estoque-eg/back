@@ -20,11 +20,13 @@ const { listarCategorias, listarCategoria, cadastrarCategoria, editararCategoria
 const { cadastrarcliente, listarclientes, listarcliente, editararcliente, excluircliente } = require("./Controladores/cliente")
 
 //Fornecedores
-const { cadastrarfornecedor, listarfornecedors, listarfornecedor, editararfornecedor, excluirfornecedor } = require("./Controladores/fornecedor")
+const { cadastrarfornecedor, listarfornecedores, listarfornecedor, editararfornecedor, excluirfornecedor } = require("./Controladores/fornecedor")
 
 //Produtos_Fornecedores
 const { cadastraProdutos_Fornecedores, exlcuirProdutos_Fornecedores, listarProdutos_fornecedores, listarProdutos_fornecedor } = require("./Controladores/produtos_fornecedores")
 
+//Formas-pagemento
+const { listarformas_pagemento, listarforma_pagemento, cadastrarformas_pagemento, editararformas_pagemento, excluirformas_pagemento } = require("./Controladores/formas-pagemento")
 
 
 //---------------------------Rotas--------------------------------------
@@ -36,14 +38,13 @@ rotas.delete('/roles/:id', deleteRotes);
 
 //login
 rotas.post('/login', login)
-
+rotas.post('/usuario', cadastrarUsuario)
 //Autenticação JWT
 rotas.use(autenticacao);
 
 //Rotas Protegidas por token -----------------------------------
 
 //Rotas-Usuarios
-rotas.post('/usuario', cadastrarUsuario)
 rotas.get('/usuario', listarUsuarios)
 rotas.get('/usuario/:id', listarUsuario)
 rotas.put('/usuario/:id', editararUsuario)
@@ -65,7 +66,7 @@ rotas.delete('/cliente/:id', excluircliente)
 
 //Rotas-Fornecedor
 rotas.post('/fornecedor', cadastrarfornecedor)
-rotas.get('/fornecedor', listarfornecedors)
+rotas.get('/fornecedor', listarfornecedores)
 rotas.get('/fornecedor/:id', listarfornecedor)
 rotas.put('/fornecedor/:id', editararfornecedor)
 rotas.delete('/fornecedor/:id', excluirfornecedor)
@@ -75,5 +76,13 @@ rotas.post('/produtos_fornecedores', cadastraProdutos_Fornecedores)
 rotas.get('/produtos_fornecedores/', listarProdutos_fornecedores)
 rotas.get('/produtos_fornecedores/:id', listarProdutos_fornecedor)
 rotas.delete('/produtos_fornecedores/:id', exlcuirProdutos_Fornecedores)
+
+//Rotas-Formas_Pagamento
+rotas.post('/formas-pagemento', cadastrarformas_pagemento)
+rotas.get('/formas-pagemento', listarformas_pagemento)
+rotas.get('/formas-pagemento/:id', listarforma_pagemento)
+rotas.put('/formas-pagemento/:id', editararformas_pagemento)
+rotas.delete('/formas-pagemento/:id', excluirformas_pagemento)
+
 
 module.exports = rotas

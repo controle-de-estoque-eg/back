@@ -5,7 +5,7 @@ const cadastrarfornecedor = async (req, res) => {
     const dados = { ...req.body }
     const { nome, email, documento, telefone } = dados
     try {
-        const nomeExistente = await knex('fornecedores').where({ nome }).first();
+        const nomeExistente = await knex('fornecedores').where({ nome, soft_delete: false }).first();
 
         if (nomeExistente) {
             return res.status(409).json({
@@ -15,7 +15,7 @@ const cadastrarfornecedor = async (req, res) => {
         }
 
 
-        const emailExistente = await knex('fornecedores').where({ email }).first();
+        const emailExistente = await knex('fornecedores').where({ email, soft_delete: false }).first();
 
         if (emailExistente) {
             return res.status(409).json({
@@ -24,7 +24,7 @@ const cadastrarfornecedor = async (req, res) => {
             });
         }
 
-        const documentoExistente = await knex('fornecedores').where({ documento }).first();
+        const documentoExistente = await knex('fornecedores').where({ documento, soft_delete: false }).first();
 
         if (documentoExistente) {
             return res.status(409).json({
@@ -33,7 +33,7 @@ const cadastrarfornecedor = async (req, res) => {
             });
         }
 
-        const telefoneExistente = await knex('fornecedores').where({ telefone }).first();
+        const telefoneExistente = await knex('fornecedores').where({ telefone, soft_delete: false }).first();
 
         if (telefoneExistente) {
             return res.status(409).json({
@@ -52,9 +52,9 @@ const cadastrarfornecedor = async (req, res) => {
     }
 }
 
-const listarfornecedors = async (req, res) => {
+const listarfornecedores = async (req, res) => {
     try {
-        const fornecedores = await knex('fornecedores')
+        const fornecedores = await knex('fornecedores').where({ soft_delete: false })
         return (
             res.status(200).json(fornecedores)
         )
@@ -65,7 +65,7 @@ const listarfornecedors = async (req, res) => {
 const listarfornecedor = async (req, res) => {
     const { id } = req.params
     try {
-        const fornecedor = await knex("fornecedores").where({ id }).first()
+        const fornecedor = await knex("fornecedores").where({ id, soft_delete: false }).first()
         if (!fornecedor) {
             return res.status(409).json({
                 mensagem:
@@ -85,13 +85,13 @@ const editararfornecedor = async (req, res) => {
     const { nome, email, documento, telefone } = dados
 
     try {
-        const fornecedor = await knex('fornecedores').where({ id }).first();
+        const fornecedor = await knex('fornecedores').where({ id, soft_delete: false }).first();
 
         if (!fornecedor) {
             return res.status(404).json({ mensagem: 'O fornecedor informado não existe.' });
         }
         if (nome) {
-            const nomeExistente = await knex('fornecedores').where({ nome }).first();
+            const nomeExistente = await knex('fornecedores').where({ nome, soft_delete: false }).first();
 
             if (nomeExistente) {
                 return res.status(409).json({
@@ -101,7 +101,7 @@ const editararfornecedor = async (req, res) => {
             }
         }
         if (email) {
-            const emailExistente = await knex('fornecedores').where({ email }).first();
+            const emailExistente = await knex('fornecedores').where({ email, soft_delete: false }).first();
 
             if (emailExistente) {
                 return res.status(409).json({
@@ -122,7 +122,7 @@ const editararfornecedor = async (req, res) => {
         }
 
         if (telefone) {
-            const telefoneExistente = await knex('fornecedores').where({ telefone }).first();
+            const telefoneExistente = await knex('fornecedores').where({ telefone, soft_delete: false }).first();
 
             if (telefoneExistente) {
                 return res.status(409).json({
@@ -166,4 +166,4 @@ const excluirfornecedor = async (req, res) => {
     }
 }
 
-module.exports = { cadastrarfornecedor, listarfornecedors, listarfornecedor, editararfornecedor, excluirfornecedor }
+module.exports = { cadastrarfornecedor, listarfornecedores, listarfornecedor, editararfornecedor, excluirfornecedor }

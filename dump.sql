@@ -6,6 +6,9 @@ CREATE TABLE roles (
   soft_delete BOOLEAN default false
 );
 
+INSERT INTO roles (nome)
+VALUES ('adm');
+
 CREATE TABLE categorias (
   id serial primary key,
   nome VARCHAR(255) NOT NULL,
@@ -31,7 +34,7 @@ CREATE TABLE movimento_estoque (
   id serial primary key,
   data_entrada DATE NOT NULL,
   numero_nota INT,
-  valor_total FLOAT,
+  valor_total NUMERIC(12, 2),
   descricao VARCHAR(255),
   tipo VARCHAR(255),
   fornecedor_id INT NOT NULL REFERENCES fornecedores(id),
@@ -41,6 +44,9 @@ CREATE TABLE movimento_estoque (
 CREATE TABLE formas_pagamento (
   id serial primary key,
   nome VARCHAR(255) NOT NULL,
+  create_at TIMESTAMP NOT NULL,
+  delete_at TIMESTAMP ,
+  update_at TIMESTAMP ,
   soft_delete BOOLEAN default false
 );
 
@@ -80,13 +86,14 @@ CREATE TABLE usuarios (
   soft_delete BOOLEAN default false
 );
 
-insert into usuarios (email,senha) 
-values('adm@hotmail.com',"adm123")
+INSERT INTO usuarios (nome,email,role_id,senha,create_at)
+VALUES ('adm','adm@hotmail.com','1', '$2b$10$Fdq4J23HLUd1cqiQ0BbTU.BV8Rcqu0AnQ7Wm4tHojQzeO81UVB59y','2024-03-14 14:50:53.875');
+
 
 CREATE TABLE vendas (
   id serial primary key,
   cliente_id INT NOT NULL REFERENCES clientes(id),
-  valor_total INT NOT NULL,
+  valor_total NUMERIC(12, 2) NOT NULL,
   tipo_pagamento INT NOT NULL REFERENCES venda_formas_pagamento(id),
   parcelamento INT NOT NULL ,
   usuario_id INT NOT NULL REFERENCES usuarios(id),
