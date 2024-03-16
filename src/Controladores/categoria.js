@@ -87,7 +87,7 @@ const excluirCategoria = async (req, res) => {
         await knex('categorias').where({ id }).update({
             soft_delete: true,
             delete_at: DateTime.now().setZone('America/Sao_Paulo').toISO()
-        }).returning('*');
+        })
 
         return res.status(204).json()
     } catch (error) {

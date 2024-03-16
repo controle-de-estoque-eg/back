@@ -9,12 +9,13 @@ const formasDePagamento = async (venda_id, lista_pagamentos) => {
 
         const formasPagamentoMap = new Map(formasPagamento.map(({ id, nome }) => [id, nome]));
 
-        await Promise.all(lista_pagamentos.map(async ({ pagamento_id, valor_pago }) => {
+        await Promise.all(lista_pagamentos.map(async ({ pagamento_id, valor_pago, parcelamento }) => {
             if (formasPagamentoMap.has(pagamento_id)) {
                 const formaPagamento = {
                     forma_pagamento_id: pagamento_id,
                     venda_id,
-                    valor_pago
+                    valor_pago,
+                    parcelamento
                 };
                 await knex('vendas_formas_pagamento').insert(formaPagamento);
             }

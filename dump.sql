@@ -85,12 +85,22 @@ VALUES ('adm','adm@hotmail.com','1', '$2b$10$Fdq4J23HLUd1cqiQ0BbTU.BV8Rcqu0AnQ7W
 
 CREATE TABLE vendas (
   id serial primary key,
-  cliente_id INT NOT NULL REFERENCES clientes(id),
+  cliente_id INT REFERENCES clientes(id),
   valor_total NUMERIC(12, 2) NOT NULL,
   desconto_Total NUMERIC(12, 2),
-  parcelamento INT NOT NULL,
   usuario_id INT NOT NULL REFERENCES usuarios(id),
-  concluida BOOLEAN,
+  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  delete_at TIMESTAMP,
+  update_at TIMESTAMP,
+  soft_delete BOOLEAN DEFAULT false
+);
+
+CREATE TABLE pedidos (
+  id serial primary key,
+  cliente_id INT REFERENCES clientes(id),
+  valor_total NUMERIC(12, 2) NOT NULL,
+  desconto_total NUMERIC(12, 2),
+  usuario_id INT NOT NULL REFERENCES usuarios(id),
   create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   delete_at TIMESTAMP,
   update_at TIMESTAMP,
@@ -103,6 +113,7 @@ CREATE TABLE vendas_formas_pagamento (
   venda_id INT NOT NULL REFERENCES vendas(id),
   forma_pagamento_id INT NOT NULL REFERENCES formas_pagamento(id),
   valor_pago NUMERIC(12, 2) NOT NULL,
+  parcelamento INT,
   create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   delete_at TIMESTAMP,
   update_at TIMESTAMP,
@@ -137,6 +148,19 @@ CREATE TABLE vendas_produtos (
   create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   delete_at TIMESTAMP 
 );
+
+CREATE TABLE pedidos_produtos (
+  id serial primary key,
+  produto_id INT REFERENCES produtos(id),
+  pedido_id INT REFERENCES pedidos(id),
+  quantidade_produto INT,
+  valor_produto NUMERIC(12, 2) NOT NULL,
+  desconto_total NUMERIC(12, 2),
+  soft_delete BOOLEAN default false,
+  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  delete_at TIMESTAMP 
+);
+
 
 CREATE TABLE produtos_fornecedores (
   id serial primary key,

@@ -32,9 +32,12 @@ const { listarformas_pagemento, listarforma_pagemento, cadastrarformas_pagemento
 const { cadastroProduto, editarProduto, listarProdutos, listarProduto, excluirProduto } = require('./Controladores/produto')
 
 //Vendas
-const { cadastrarVenda, listarVenda, listarVendas, editarVenda, excluirVenda } = require('./Controladores/vendas')
+const { cadastrarVenda, listarVenda, listarVendas, excluirVenda } = require('./Controladores/vendas')
 
+//Pedidos
+const { cadastrarPedido, listarPedido, listarPedidos, excluirPedido } = require('./Controladores/pedidos')
 
+const { cadastrarEstoque, listarEstoques, listarEstoque, editarEstoque, excluirEstoque } = require('./Controladores/estoque')
 
 //---------------------------Rotas--------------------------------------
 
@@ -102,8 +105,19 @@ rotas.delete('/produto/:id', excluirProduto)
 rotas.post('/venda', cadastrarVenda)
 rotas.get('/venda', listarVendas)
 rotas.get('/venda/:id', listarVenda)
-rotas.put('/venda/:id', editarVenda)
 rotas.delete('/venda/:id', excluirVenda)
 
+//Rotas-Pedidos
+rotas.post('/pedido', cadastrarPedido)
+rotas.get('/pedido', listarPedidos)
+rotas.get('/pedido/:id', listarPedido)
+rotas.delete('/pedido/:id', excluirPedido)
+
+//Rotas-Estoque
+rotas.post('/estoque', cadastrarEstoque)
+rotas.get('/estoque', listarEstoques)
+rotas.get('/estoque/:id', listarEstoque)
+rotas.put('/produto/:id', editarEstoque)
+rotas.delete('/estoque/:id', excluirEstoque)
 
 module.exports = rotas
