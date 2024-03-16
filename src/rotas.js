@@ -1,49 +1,93 @@
-const express = require("express")
+const express = require('express')
 const rotas = express.Router()
 
 //autenticacao
-const autenticacao = require("./Intermediarios/autenticacao")
+const autenticacao = require('./Intermediarios/autenticacao')
 
 //Roles
-const { cadatroRotes, listarRotes, deleteRotes } = require("./Controladores/rotes")
+const {
+  cadatroRotes,
+  listarRotes,
+  deleteRotes,
+} = require('./Controladores/rotes')
 
-//Usuarios 
-const { listarUsuarios, listarUsuario, cadastrarUsuario, editararUsuario, excluirUsuario } = require("./Controladores/usuarios")
+//Usuarios
+const {
+  listarUsuarios,
+  listarUsuario,
+  cadastrarUsuario,
+  editararUsuario,
+  excluirUsuario,
+} = require('./Controladores/usuarios')
 
 //login
-const login = require("./Controladores/login")
+const login = require('./Controladores/login')
 
 //Categorias
-const { listarCategorias, listarCategoria, cadastrarCategoria, editararCategoria, excluirCategoria } = require("./Controladores/categoria")
+const {
+  listarCategorias,
+  listarCategoria,
+  cadastrarCategoria,
+  editararCategoria,
+  excluirCategoria,
+} = require('./Controladores/categoria')
 
 //Cliente
-const { cadastrarcliente, listarclientes, listarcliente, editararcliente, excluircliente } = require("./Controladores/cliente")
+const {
+  cadastrarcliente,
+  listarclientes,
+  listarcliente,
+  editararcliente,
+  excluircliente,
+} = require('./Controladores/cliente')
 
 //Fornecedores
-const { cadastrarfornecedor, listarfornecedores, listarfornecedor, editararfornecedor, excluirfornecedor } = require("./Controladores/fornecedor")
+const {
+  cadastrarfornecedor,
+  listarfornecedores,
+  listarfornecedor,
+  editararfornecedor,
+  excluirfornecedor,
+} = require('./Controladores/fornecedor')
 
 //Produtos_Fornecedores
-const { cadastraProdutos_Fornecedores, exlcuirProdutos_Fornecedores, listarProdutos_fornecedores, listarProdutos_fornecedor } = require("./Controladores/produtos_fornecedores")
+const {
+  cadastraProdutos_Fornecedores,
+  exlcuirProdutos_Fornecedores,
+  listarProdutos_fornecedores,
+  listarProdutos_fornecedor,
+} = require('./Controladores/produtos_fornecedores')
 
 //Formas-pagemento
-const { listarformas_pagemento, listarforma_pagemento, cadastrarformas_pagemento, editararformas_pagemento, excluirformas_pagemento } = require("./Controladores/formas-pagemento")
+const {
+  listarformas_pagemento,
+  listarforma_pagemento,
+  cadastrarformas_pagemento,
+  editararformas_pagemento,
+  excluirformas_pagemento,
+} = require('./Controladores/formas-pagemento')
 
 //Produto
-const { cadastroProduto, editarProduto, listarProdutos, listarProduto, excluirProduto } = require('./Controladores/produto')
-
+const {
+  cadastroProduto,
+  editarProduto,
+  listarProdutos,
+  listarProduto,
+  excluirProduto,
+} = require('./Controladores/produto')
 
 //---------------------------Rotas--------------------------------------
 
 //Rotas-Roles
 rotas.get('/roles', listarRotes)
 rotas.post('/roles', cadatroRotes)
-rotas.delete('/roles/:id', deleteRotes);
+rotas.delete('/roles/:id', deleteRotes)
 
 //login
 rotas.post('/login', login)
 rotas.post('/usuario', cadastrarUsuario)
 //Autenticação JWT
-rotas.use(autenticacao);
+rotas.use(autenticacao)
 
 //Rotas Protegidas por token -----------------------------------
 
@@ -93,8 +137,5 @@ rotas.get('/produto', listarProdutos)
 rotas.get('/produto/:id', listarProduto)
 rotas.put('/produto/:id', editarProduto)
 rotas.delete('/produto/:id', excluirProduto)
-
-
-
 
 module.exports = rotas

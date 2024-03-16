@@ -7,7 +7,7 @@ CREATE TABLE roles (
 );
 
 INSERT INTO roles (nome)
-VALUES ('adm');
+VALUES ('SUDO'),("ADMIN"),('USER');
 
 CREATE TABLE categorias (
   id serial primary key,
@@ -19,16 +19,29 @@ CREATE TABLE categorias (
   soft_delete BOOLEAN default false
 );
 
+INSERT INTO categorias(nome,descricao, create_at) 
+VALUES ('Camisas','Todo tipo de Camisas','2024-03-14 14:50:53.875'),
+('Calças','Todo tipo de Calças','2024-03-14 14:50:53.875'),
+('Linhas','Todo tipo de Linha','2024-03-14 14:50:53.875'),
+('Tintas','Todo tipo de Tinta','2024-03-14 14:50:53.875'),
+('Brinquedos','Todo tipo de Brinquedo','2024-03-14 14:50:53.875');
+
 CREATE TABLE fornecedores (
   id serial primary key,
   nome VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
   telefone INT NOT NULL,
-  documento INT ,
+  documento INT,
   create_at TIMESTAMP NOT NULL,
   delete_at TIMESTAMP ,
   soft_delete BOOLEAN default false
 );
+INSERT INTO fornecedores(nome,email,telefone,documento,create_at)
+INSERT INTO fornecedores(nome,email,telefone,documento,create_at)
+VALUES ('Fornecedor 1','fornecedor1@email.com','33225164',334569,'2024-03-14 14:50:53.875'),
+('Fornecedor 2','fornecedor2@email.com','33251124',698215,'2024-03-14 14:50:53.875'),
+('Fornecedor 3','fornecedor3@email.com','33125164',5698765,'2024-03-14 14:50:53.875');
+
 
 CREATE TABLE movimento_estoque (
   id serial primary key,
@@ -80,8 +93,9 @@ CREATE TABLE usuarios (
 );
 
 INSERT INTO usuarios (nome,email,role_id,senha,create_at)
-VALUES ('adm','adm@hotmail.com','1', '$2b$10$Fdq4J23HLUd1cqiQ0BbTU.BV8Rcqu0AnQ7Wm4tHojQzeO81UVB59y','2024-03-14 14:50:53.875');
-
+VALUES ('SUDO','sudo@email.com','1', '$2b$10$Fdq4J23HLUd1cqiQ0BbTU.BV8Rcqu0AnQ7Wm4tHojQzeO81UVB59y','2024-03-14 14:50:53.875'),
+('adm','adm@email.com','2', '$2b$10$Fdq4J23HLUd1cqiQ0BbTU.BV8Rcqu0AnQ7Wm4tHojQzeO81UVB59y','2024-03-14 14:50:53.875'),
+('user','user@email.com','3', '$2b$10$Fdq4J23HLUd1cqiQ0BbTU.BV8Rcqu0AnQ7Wm4tHojQzeO81UVB59y','2024-03-14 14:50:53.875');
 
 CREATE TABLE vendas (
   id serial primary key,
@@ -125,6 +139,10 @@ CREATE TABLE produtos (
   codigo_de_barras INT ,
   soft_delete BOOLEAN default false
 );
+
+INSERT INTO produtos(nome,descricao,categoria_id,imagem,valor_custo,valor_venda,quantidade_estoque,create_at,disponivel,codigo_de_barras)
+VALUES ('Camisa Masculina GG','Camisa Masculina Tamanho GG cor Vermelha',1,'',3,4,5,'2024-03-14 14:50:53.875',true,123),
+('Calça Masculina GG','Calça Masculina Tamanho GG cor Vermelha',2,'',3,4,5,'2024-03-14 14:50:53.875',true,321);
 
 CREATE TABLE vendas_produtos (
   id serial primary key,
