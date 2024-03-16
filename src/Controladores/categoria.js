@@ -40,7 +40,7 @@ const cadastrarCategoria = async (req, res) => {
                     'Ja existe uma categoria com esse nome',
             });
         }
-        const novaCategoria = await knex('categorias').insert({ nome, descricao, create_at: DateTime.now().setZone('America/Sao_Paulo').toISO() }).returning("*")
+        const novaCategoria = await knex('categorias').insert({ nome, descricao }).returning("*")
 
         return res.status(201).send(novaCategoria[0]);
     } catch (error) {

@@ -21,9 +21,8 @@ const cadastroProduto = async (req, res) => {
                     'A categoria informado não existe.'
             });
         }
-        const dadosCompletos = { ...dados, create_at: DateTime.now().setZone('America/Sao_Paulo').toISO() }
 
-        const novoproduto = await knex('produtos').insert(dadosCompletos).returning("*")
+        const novoproduto = await knex('produtos').insert(dados).returning("*")
 
         if (valor_custo) {
             await knex('historico_custo').insert({ produto_id: novoproduto[0].id, valor_custo, update_at: DateTime.now().setZone('America/Sao_Paulo').toISO() })

@@ -42,9 +42,7 @@ const cadastrarfornecedor = async (req, res) => {
             });
         }
 
-        const dadosCompletos = { ...dados, create_at: DateTime.now().setZone('America/Sao_Paulo').toISO() }
-
-        const novofornecedor = await knex("fornecedores").insert(dadosCompletos).returning("*");
+        const novofornecedor = await knex("fornecedores").insert(dados).returning("*");
 
         return res.status(201).json(novofornecedor[0]);
     } catch (error) {

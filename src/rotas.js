@@ -31,6 +31,10 @@ const { listarformas_pagemento, listarforma_pagemento, cadastrarformas_pagemento
 //Produto
 const { cadastroProduto, editarProduto, listarProdutos, listarProduto, excluirProduto } = require('./Controladores/produto')
 
+//Vendas
+const { cadastrarVenda, listarVenda, listarVendas, editarVenda, excluirVenda } = require('./Controladores/vendas')
+
+
 
 //---------------------------Rotas--------------------------------------
 
@@ -94,7 +98,12 @@ rotas.get('/produto/:id', listarProduto)
 rotas.put('/produto/:id', editarProduto)
 rotas.delete('/produto/:id', excluirProduto)
 
-
+//Rotas-Vendas
+rotas.post('/venda', cadastrarVenda)
+rotas.get('/venda', listarVendas)
+rotas.get('/venda/:id', listarVenda)
+rotas.put('/venda/:id', editarVenda)
+rotas.delete('/venda/:id', excluirVenda)
 
 
 module.exports = rotas

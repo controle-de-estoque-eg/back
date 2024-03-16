@@ -15,8 +15,7 @@ const cadastraProdutos_Fornecedores = async (req, res) => {
         await Promise.all(lista_produtos.map(async (elemento) => {
             const pedidoProduto = {
                 produto_id: elemento.produto_id,
-                fornecedor_id,
-                create_at: DateTime.now().setZone('America/Sao_Paulo').toISO()
+                fornecedor_id
             };
             const produto = await knex('produtos_fornecedores').insert(pedidoProduto).returning("*");
             produtosCadastrados.push(...produto);

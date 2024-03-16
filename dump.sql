@@ -13,7 +13,7 @@ CREATE TABLE categorias (
   id serial primary key,
   nome VARCHAR(255) NOT NULL,
   descricao VARCHAR(255) NOT NULL,
-  create_at TIMESTAMP NOT NULL,
+  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   delete_at TIMESTAMP ,
   update_at TIMESTAMP,
   soft_delete BOOLEAN default false
@@ -25,7 +25,7 @@ CREATE TABLE fornecedores (
   email VARCHAR(255) NOT NULL UNIQUE,
   telefone INT NOT NULL,
   documento INT ,
-  create_at TIMESTAMP NOT NULL,
+  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   delete_at TIMESTAMP ,
   soft_delete BOOLEAN default false
 );
@@ -44,7 +44,7 @@ CREATE TABLE movimento_estoque (
 CREATE TABLE formas_pagamento (
   id serial primary key,
   nome VARCHAR(255) NOT NULL,
-  create_at TIMESTAMP NOT NULL,
+  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   delete_at TIMESTAMP ,
   update_at TIMESTAMP ,
   soft_delete BOOLEAN default false
@@ -61,7 +61,7 @@ CREATE TABLE clientes (
   bairro varchar(255),
   cidade varchar(255),
   estado varchar(255),
-  create_at TIMESTAMP NOT NULL,
+  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   delete_at TIMESTAMP ,
   update_at TIMESTAMP ,
   soft_delete BOOLEAN default false
@@ -73,7 +73,7 @@ CREATE TABLE usuarios (
   email VARCHAR(255) NOT NULL UNIQUE,
   senha VARCHAR(255) NOT NULL,
   role_id INT NOT NULL REFERENCES roles(id),
-  create_at TIMESTAMP NOT NULL,
+  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   delete_at TIMESTAMP ,
   update_at TIMESTAMP ,
   soft_delete BOOLEAN default false
@@ -87,11 +87,11 @@ CREATE TABLE vendas (
   id serial primary key,
   cliente_id INT NOT NULL REFERENCES clientes(id),
   valor_total NUMERIC(12, 2) NOT NULL,
+  desconto_Total NUMERIC(12, 2),
   parcelamento INT NOT NULL,
   usuario_id INT NOT NULL REFERENCES usuarios(id),
   concluida BOOLEAN,
-  desconto INT,
-  create_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   delete_at TIMESTAMP,
   update_at TIMESTAMP,
   soft_delete BOOLEAN DEFAULT false
@@ -103,7 +103,7 @@ CREATE TABLE vendas_formas_pagamento (
   venda_id INT NOT NULL REFERENCES vendas(id),
   forma_pagamento_id INT NOT NULL REFERENCES formas_pagamento(id),
   valor_pago NUMERIC(12, 2) NOT NULL,
-  create_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   delete_at TIMESTAMP,
   update_at TIMESTAMP,
   soft_delete BOOLEAN DEFAULT false
@@ -117,8 +117,8 @@ CREATE TABLE produtos (
   imagem varchar(255),
   valor_custo NUMERIC(12, 2) ,
   valor_venda NUMERIC(12, 2) ,
-  quantidade_estoque INT ,
-  create_at TIMESTAMP NOT NULL,
+  quantidade_estoque INT default 0,
+  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   delete_at TIMESTAMP ,
   update_at TIMESTAMP ,
   disponivel BOOLEAN default false,
@@ -131,9 +131,11 @@ CREATE TABLE vendas_produtos (
   produto_id INT REFERENCES produtos(id),
   venda_id INT REFERENCES vendas(id),
   quantidade_produto INT,
-  valor_produto INT,
-  desconto INT,
-  soft_delete BOOLEAN default false
+  valor_produto NUMERIC(12, 2) NOT NULL,
+  desconto NUMERIC(12, 2),
+  soft_delete BOOLEAN default false,
+  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  delete_at TIMESTAMP 
 );
 
 CREATE TABLE produtos_fornecedores (
@@ -141,7 +143,7 @@ CREATE TABLE produtos_fornecedores (
   produto_id INT REFERENCES produtos(id),
   fornecedor_id INT REFERENCES fornecedores(id),
   soft_delete BOOLEAN default false,
-  create_at TIMESTAMP NOT NULL,
+  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   delete_at TIMESTAMP ,
   update_at TIMESTAMP 
 );
@@ -150,15 +152,15 @@ CREATE TABLE historico_custo (
   id serial primary key,
   produto_id INT REFERENCES produtos(id),
   valor_custo NUMERIC(12, 2),
-  update_at TIMESTAMP,
-  soft_delete BOOLEAN default false
+  soft_delete BOOLEAN default false,
+  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE historico_venda (
   id serial primary key,
   produto_id INT REFERENCES produtos(id),
   valor_venda NUMERIC(12, 2),
-  update_at TIMESTAMP,
+  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP
   soft_delete BOOLEAN default false
 );
 
@@ -168,7 +170,8 @@ CREATE TABLE produto_movimento_estoque (
   movimento_estoque_id INT REFERENCES movimento_estoque(id),
   custo FLOAT,
   quantidade INT,
-  soft_delete BOOLEAN default false
+  soft_delete BOOLEAN default false,
+  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 

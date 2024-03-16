@@ -41,7 +41,7 @@ const cadastrarformas_pagemento = async (req, res) => {
                     'Ja existe uma forma de pagamento com esse nome',
             });
         }
-        const novaformas_pagamento = await knex('formas_pagamento').insert({ nome, create_at: DateTime.now().setZone('America/Sao_Paulo').toISO() }).returning("*")
+        const novaformas_pagamento = await knex('formas_pagamento').insert({ nome }).returning("*")
 
         return res.status(201).send(novaformas_pagamento[0]);
     } catch (error) {

@@ -20,8 +20,7 @@ const cadastrarcliente = async (req, res) => {
                     'O cpf informado já está sendo utilizado por outro cliente.',
             });
         }
-        const dadosCompletos = { ...dados, create_at: DateTime.now().setZone('America/Sao_Paulo').toISO() }
-        const novoCliente = await knex("clientes").insert(dadosCompletos).returning("*")
+        const novoCliente = await knex("clientes").insert(dados).returning("*")
         return res.status(201).json(novoCliente);
     } catch (error) {
         return res.status(500).json({ mensagem: error.message });
