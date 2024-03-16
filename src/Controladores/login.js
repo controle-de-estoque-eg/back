@@ -6,6 +6,7 @@ const senhaJwt = process.env.SENHA_JWT;
 const login = async (req, res) => {
     const { email, senha } = req.body;
     try {
+
         const usuarioComRole = await knex('usuarios')
             .select('usuarios.*', 'roles.nome as role_nome')
             .where({ 'usuarios.email': email, 'usuarios.soft_delete': false })

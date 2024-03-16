@@ -112,15 +112,14 @@ CREATE TABLE produtos (
   nome VARCHAR(255) NOT NULL,
   descricao VARCHAR(255) NOT NULL,
   categoria_id INT REFERENCES categorias(id),
-  fornecedor_id INT ,
   imagem varchar(255),
-  historico_custo_id INT,
-  historico_venda_id INT,
-  quantidade_estoque INT NOT NULL ,
+  valor_custo NUMERIC(12, 2) ,
+  valor_venda NUMERIC(12, 2) ,
+  quantidade_estoque INT ,
   create_at TIMESTAMP NOT NULL,
   delete_at TIMESTAMP ,
   update_at TIMESTAMP ,
-  disponivel BOOLEAN ,
+  disponivel BOOLEAN default false,
   codigo_de_barras INT ,
   soft_delete BOOLEAN default false
 );
@@ -145,27 +144,21 @@ CREATE TABLE produtos_fornecedores (
   update_at TIMESTAMP 
 );
 
-alter table produtos add constraint fk_fornecedor_id foreign key (fornecedor_id) references produtos_fornecedores(id);
-
 CREATE TABLE historico_custo (
   id serial primary key,
   produto_id INT REFERENCES produtos(id),
-  valor FLOAT,
+  valor_custo NUMERIC(12, 2),
   update_at TIMESTAMP,
   soft_delete BOOLEAN default false
 );
-
-alter table produtos add constraint fk_historico_custo_id foreign key (historico_custo_id) references historico_custo(id);
 
 CREATE TABLE historico_venda (
   id serial primary key,
   produto_id INT REFERENCES produtos(id),
-  valor FLOAT,
+  valor_venda NUMERIC(12, 2),
   update_at TIMESTAMP,
   soft_delete BOOLEAN default false
 );
-
-alter table produtos add constraint fk_historico_venda_id foreign key (historico_venda_id) references historico_venda(id);
 
 CREATE TABLE produto_movimento_estoque (
   id serial primary key,

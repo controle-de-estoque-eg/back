@@ -28,6 +28,9 @@ const { cadastraProdutos_Fornecedores, exlcuirProdutos_Fornecedores, listarProdu
 //Formas-pagemento
 const { listarformas_pagemento, listarforma_pagemento, cadastrarformas_pagemento, editararformas_pagemento, excluirformas_pagemento } = require("./Controladores/formas-pagemento")
 
+//Produto
+const { cadastroProduto, editarProduto, listarProdutos, listarProduto, excluirProduto } = require('./Controladores/produto')
+
 
 //---------------------------Rotas--------------------------------------
 
@@ -83,6 +86,15 @@ rotas.get('/formas-pagemento', listarformas_pagemento)
 rotas.get('/formas-pagemento/:id', listarforma_pagemento)
 rotas.put('/formas-pagemento/:id', editararformas_pagemento)
 rotas.delete('/formas-pagemento/:id', excluirformas_pagemento)
+
+//Rotas-Produto
+rotas.post('/produto', cadastroProduto)
+rotas.get('/produto', listarProdutos)
+rotas.get('/produto/:id', listarProduto)
+rotas.put('/produto/:id', editarProduto)
+rotas.delete('/produto/:id', excluirProduto)
+
+
 
 
 module.exports = rotas
