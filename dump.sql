@@ -50,13 +50,6 @@ CREATE TABLE formas_pagamento (
   soft_delete BOOLEAN default false
 );
 
-CREATE TABLE venda_formas_pagamento (
-  id serial primary key,
-  venda_id INT ,
-  form_pagamento_id INT NOT NULL REFERENCES formas_pagamento(id),
-  soft_delete BOOLEAN default false
-);
-
 CREATE TABLE clientes (
   id serial primary key,
   nome VARCHAR(255) NOT NULL,
@@ -94,18 +87,27 @@ CREATE TABLE vendas (
   id serial primary key,
   cliente_id INT NOT NULL REFERENCES clientes(id),
   valor_total NUMERIC(12, 2) NOT NULL,
-  tipo_pagamento INT NOT NULL REFERENCES venda_formas_pagamento(id),
-  parcelamento INT NOT NULL ,
+  parcelamento INT NOT NULL,
   usuario_id INT NOT NULL REFERENCES usuarios(id),
-  concluida BOOLEAN ,
+  concluida BOOLEAN,
   desconto INT,
-  create_at TIMESTAMP NOT NULL,
-  delete_at TIMESTAMP ,
-  update_at TIMESTAMP  ,
-  soft_delete BOOLEAN default false
+  create_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  delete_at TIMESTAMP,
+  update_at TIMESTAMP,
+  soft_delete BOOLEAN DEFAULT false
 );
 
-alter table venda_formas_pagamento add constraint fk_venda_id foreign key (venda_id) references vendas(id);
+
+CREATE TABLE vendas_formas_pagamento (
+  id serial primary key,
+  venda_id INT NOT NULL REFERENCES vendas(id),
+  forma_pagamento_id INT NOT NULL REFERENCES formas_pagamento(id),
+  valor_pago NUMERIC(12, 2) NOT NULL,
+  create_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  delete_at TIMESTAMP,
+  update_at TIMESTAMP,
+  soft_delete BOOLEAN DEFAULT false
+);
 
 CREATE TABLE produtos (
   id serial primary key,
