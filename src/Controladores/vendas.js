@@ -8,7 +8,7 @@ const formasDePagamento = require('../ferramentas/formasDePgamento')
 
 const cadastrarVenda = async (req, res) => {
     const { lista_produtos, lista_pagamentos, ...dados } = req.body;
-    const { cliente_id } = dados
+    const { cliente_id, concluida } = dados
     try {
 
         if (cliente_id) {
@@ -26,27 +26,30 @@ const cadastrarVenda = async (req, res) => {
 
         const [cadastroVenda] = await knex('vendas').insert(dados).returning('*')
 
-        const { id: venda_id } = cadastroVenda;
+        if (concluida) {
+            const { id: venda_id } = cadastroVenda;
 
-        const pedidoProduto = await cadastraVendaProduto(venda_id, lista_produtos);
-        if (!pedidoProduto.validador) {
-            return res.status(403).json(pedidoProduto.mensagem)
+            const pedidoProduto = await cadastraVendaProduto(venda_id, lista_produtos);
+            if (!pedidoProduto.validador) {
+                return res.status(403).json(pedidoProduto.mensagem)
+            }
+
+            const cadastroPagamento = await formasDePagamento(venda_id, lista_pagamentos)
+
+            if (!cadastroPagamento.validador) {
+                return res.status(403).json(cadastroPagamento.mensagem)
+            }
+
+            const estoque = await ajustaEstoque(lista_produtos);
+
+            if (!estoque.validador) {
+                return res.status(403).json(estoque.mensagem)
+            }
+
+            return res.status(200).json({ mensagem: 'Pedido cadastrado com sucesso' })
         }
 
-        const cadastroPagamento = await formasDePagamento(venda_id, lista_pagamentos)
-
-        if (!cadastroPagamento.validador) {
-            return res.status(403).json(cadastroPagamento.mensagem)
-        }
-
-        const estoque = await ajustaEstoque(lista_produtos);
-
-        if (!estoque.validador) {
-            return res.status(403).json(estoque.mensagem)
-        }
-
-        return res.status(200).json({ mensagem: 'Pedido cadastrado com sucesso' })
-
+        return res.status(200).json({ mensagem: 'Pedido salvo com sucesso' })
     } catch (error) {
         return res.status(500).json({ mensagem: error.message })
     }

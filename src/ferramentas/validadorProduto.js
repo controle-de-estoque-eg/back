@@ -1,41 +1,44 @@
 const knex = require('../conexao')
 
 const validadorProduto = async (pedido_produtos) => {
-    const resultado = {}
-    pedido_produtos.forEach(item => {
-        const { produto_id, quantidade_produto } = item;
-        if (resultado[produto_id]) {
-            resultado[produto_id] += quantidade_produto;
-        } else {
-            resultado[produto_id] = quantidade_produto;
-        }
-    })
-    const entrada = resultado
     try {
-        const ids = Object.keys(entrada);
-        const rows = await knex('produtos').where({ soft_delete: false }).whereIn('id', ids).select('id', 'quantidade_estoque');
         const resultado = {};
 
-        const idsDoBancoDeDados = rows.map(row => String(row.id)); // Convertendo para string
-        const idsNaoEncontrados = ids.filter(id => !idsDoBancoDeDados.includes(String(id)));
-
-        if (idsNaoEncontrados.length > 0) {
-            return {
-                validador: false,
-                mensagem: `Os seguintes IDs não foram encontrados no banco de dados: ${idsNaoEncontrados.join(', ')}`
+        pedido_produtos.forEach(item => {
+            const { produto_id, quantidade_produto } = item;
+            if (resultado[produto_id]) {
+                resultado[produto_id] += quantidade_produto;
+            } else {
+                resultado[produto_id] = quantidade_produto;
             }
-        }
-
-        rows.forEach(row => {
-            resultado[row.id] = row.quantidade_estoque;
         });
 
-        const invalidos = rows.filter(row => row.quantidade_estoque < entrada[row.id]).map(row => row.id);
-        const mensagem = invalidos.length > 0 ? `Os seguintes IDs não passaram na validação: ${invalidos.join(', ')}` : 'Todos os valores são válidos.';
+        const entrada = resultado;
+
+        const ids = Object.keys(entrada);
+        const rows = await knex('produtos').where({ soft_delete: false }).whereIn('id', ids).select('id', 'quantidade_estoque');
+
+        const produtosInsuficienteEstoque = [];
+
+        rows.forEach(row => {
+            const novoEstoque = row.quantidade_estoque - entrada[row.id];
+
+            if (novoEstoque < 0) {
+                produtosInsuficienteEstoque.push(row.id);
+            } else {
+                resultado[row.id] = novoEstoque;
+            }
+        });
+
+        if (produtosInsuficienteEstoque.length > 0) {
+            return {
+                validador: false,
+                mensagem: `Estoque insuficiente para os seguintes produtos ID: ${produtosInsuficienteEstoque.join(', ')}`
+            };
+        }
 
         return {
-            validador: invalidos.length === 0,
-            mensagem: mensagem
+            validador: true
         };
     } catch (error) {
         return {
