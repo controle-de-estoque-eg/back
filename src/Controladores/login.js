@@ -21,7 +21,7 @@ const login = async (req, res) => {
     const senhaCorreta = await bcrypt.compare(senha, usuarioComRole.senha)
 
     if (!senhaCorreta) {
-      return res.status(401).json({ mensagem: 'Email ou senha não confere' })
+      return res.status(404).json({ mensagem: 'Email ou senha não confere' })
     }
     const token = jwt.sign(
       {

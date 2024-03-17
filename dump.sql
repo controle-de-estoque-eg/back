@@ -93,9 +93,15 @@ CREATE TABLE usuarios (
 );
 
 INSERT INTO usuarios (nome,email,role_id,senha,create_at)
+<<<<<<< Updated upstream
 VALUES ('SUDO','sudo@email.com','1', '$2b$10$Fdq4J23HLUd1cqiQ0BbTU.BV8Rcqu0AnQ7Wm4tHojQzeO81UVB59y','2024-03-14 14:50:53.875'),
 ('adm','adm@email.com','2', '$2b$10$Fdq4J23HLUd1cqiQ0BbTU.BV8Rcqu0AnQ7Wm4tHojQzeO81UVB59y','2024-03-14 14:50:53.875'),
 ('user','user@email.com','3', '$2b$10$Fdq4J23HLUd1cqiQ0BbTU.BV8Rcqu0AnQ7Wm4tHojQzeO81UVB59y','2024-03-14 14:50:53.875');
+=======
+VALUES ('adm','adm@hotmail.com','1', '$2b$10$Fdq4J23HLUd1cqiQ0BbTU.BV8Rcqu0AnQ7Wm4tHojQzeO81UVB59y','2024-03-14 14:50:53.875');
+VALUES ('sudo','sudo@Email.com','2', '$2b$10$Fdq4J23HLUd1cqiQ0BbTU.BV8Rcqu0AnQ7Wm4tHojQzeO81UVB59y','2024-03-14 14:50:53.875');
+
+>>>>>>> Stashed changes
 
 CREATE TABLE vendas (
   id serial primary key,
@@ -177,6 +183,7 @@ CREATE TABLE historico_venda (
   produto_id INT REFERENCES produtos(id),
   valor_venda NUMERIC(12, 2),
   update_at TIMESTAMP,
+  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   soft_delete BOOLEAN default false
 );
 
