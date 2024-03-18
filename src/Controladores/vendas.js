@@ -3,9 +3,9 @@ const { DateTime } = require('luxon');
 
 const validadorProduto = require('../ferramentas/validadorProduto')
 const cadastraVendaProduto = require('../ferramentas/cadastroVendaProduto')
-const ajustaEstoque = require('../ferramentas/ajustarEstoque')
+const diminuirEstoque = require('../ferramentas/diminuirEstoque')
 const formasDePagamento = require('../ferramentas/formasDePgamento')
-const mudarEstoque = require('../ferramentas/mudarEstoque')
+const aumentarEstoque = require('../ferramentas/aumentarEstoque')
 
 const cadastrarVenda = async (req, res) => {
     const { lista_produtos, lista_pagamentos, ...dados } = req.body;
@@ -53,7 +53,7 @@ const cadastrarVenda = async (req, res) => {
             return res.status(403).json(cadastroPagamento.mensagem)
         }
 
-        const estoque = await ajustaEstoque(lista_produtos);
+        const estoque = await diminuirEstoque(lista_produtos);
 
         if (!estoque.validador) {
             return res.status(403).json(estoque.mensagem)
@@ -63,7 +63,6 @@ const cadastrarVenda = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ mensagem: error.message })
     }
-
 }
 
 const listarVenda = async (req, res) => {
@@ -76,7 +75,7 @@ const listarVenda = async (req, res) => {
                     'A venda informado não existe.',
             });
         }
-        const lista_produtos = await knex('vendas_produtos').where({ venda_id: id })
+        const lista_produtos = await knex('vendas_produtos').where({ venda_id: id, soft_delete: false })
 
         const resposta = { ...pedidos, lista_produtos }
         return (
@@ -117,7 +116,7 @@ const excluirVenda = async (req, res) => {
             const lista_produtos = await knex('vendas_produtos').where({ venda_id: id, soft_delete: false }).transacting(trx);
 
             // Atualizar estoque dos produtos
-            const retornaEstoque = await mudarEstoque(lista_produtos);
+            const retornaEstoque = await aumentarEstoque(lista_produtos);
 
             if (!retornaEstoque.validador) {
                 return res.status(403).json(retornaEstoque.mensagem);

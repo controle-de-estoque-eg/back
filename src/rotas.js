@@ -37,7 +37,7 @@ const { cadastrarVenda, listarVenda, listarVendas, excluirVenda } = require('./C
 //Pedidos
 const { cadastrarPedido, listarPedido, listarPedidos, excluirPedido } = require('./Controladores/pedidos')
 
-const { cadastrarEstoque, listarEstoques, listarEstoque, editarEstoque, excluirEstoque } = require('./Controladores/estoque')
+const { cadastrarEstoque, listarEstoques, listarEstoque, excluirEstoque } = require('./Controladores/estoque')
 
 //---------------------------Rotas--------------------------------------
 
@@ -117,7 +117,6 @@ rotas.delete('/pedido/:id', excluirPedido)
 rotas.post('/estoque', cadastrarEstoque)
 rotas.get('/estoque', listarEstoques)
 rotas.get('/estoque/:id', listarEstoque)
-rotas.put('/produto/:id', editarEstoque)
 rotas.delete('/estoque/:id', excluirEstoque)
 
 module.exports = rotas

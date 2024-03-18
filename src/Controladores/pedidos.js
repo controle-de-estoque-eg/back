@@ -1,5 +1,6 @@
 const knex = require('../conexao');
 const { DateTime } = require('luxon');
+
 const validadorProduto = require('../ferramentas/validadorProduto')
 const cadastroPedidoProduto = require('../ferramentas/cadastroPedidoProduto')
 

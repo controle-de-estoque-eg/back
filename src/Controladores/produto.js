@@ -25,11 +25,11 @@ const cadastroProduto = async (req, res) => {
         const novoproduto = await knex('produtos').insert(dados).returning("*")
 
         if (valor_custo) {
-            await knex('historico_custo').insert({ produto_id: novoproduto[0].id, valor_custo, update_at: DateTime.now().setZone('America/Sao_Paulo').toISO() })
+            await knex('historico_custo').insert({ produto_id: novoproduto[0].id, valor_custo })
         }
 
         if (valor_venda) {
-            await knex('historico_venda').insert({ produto_id: novoproduto[0].id, valor_venda, update_at: DateTime.now().setZone('America/Sao_Paulo').toISO() })
+            await knex('historico_venda').insert({ produto_id: novoproduto[0].id, valor_venda })
         }
 
         return res.status(201).send(novoproduto[0]);
@@ -71,11 +71,11 @@ const editarProduto = async (req, res) => {
         const produtoAtualizado = await knex('produtos').update(dadosCompletos).where({ id }).returning('*')
 
         if (valor_custo) {
-            await knex('historico_custo').insert({ produto_id: produtoAtualizado[0].id, valor_custo, update_at: DateTime.now().setZone('America/Sao_Paulo').toISO() })
+            await knex('historico_custo').insert({ produto_id: produtoAtualizado[0].id, valor_custo })
         }
 
         if (valor_venda) {
-            await knex('historico_venda').insert({ produto_id: produtoAtualizado[0].id, valor_venda, update_at: DateTime.now().setZone('America/Sao_Paulo').toISO() })
+            await knex('historico_venda').insert({ produto_id: produtoAtualizado[0].id, valor_venda })
         }
 
         return res.status(200).json(produtoAtualizado[0])

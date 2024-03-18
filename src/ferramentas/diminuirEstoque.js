@@ -1,6 +1,6 @@
 const knex = require('../conexao');
 
-const ajustaEstoque = async (produtos) => {
+const diminuirEstoque = async (produtos) => {
 
     try {
         const todosProdutos = await knex('produtos').where({ soft_delete: false });
@@ -21,4 +21,4 @@ const ajustaEstoque = async (produtos) => {
 
 };
 
-module.exports = ajustaEstoque;
+module.exports = diminuirEstoque;

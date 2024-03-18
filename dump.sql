@@ -30,17 +30,6 @@ CREATE TABLE fornecedores (
   soft_delete BOOLEAN default false
 );
 
-CREATE TABLE movimento_estoque (
-  id serial primary key,
-  data_entrada DATE NOT NULL,
-  numero_nota INT,
-  valor_total NUMERIC(12, 2),
-  descricao VARCHAR(255),
-  tipo VARCHAR(255),
-  fornecedor_id INT NOT NULL REFERENCES fornecedores(id),
-  soft_delete BOOLEAN default false
-);
-
 CREATE TABLE formas_pagamento (
   id serial primary key,
   nome VARCHAR(255) NOT NULL,
@@ -82,6 +71,17 @@ CREATE TABLE usuarios (
 INSERT INTO usuarios (nome,email,role_id,senha,create_at)
 VALUES ('adm','adm@hotmail.com','1', '$2b$10$Fdq4J23HLUd1cqiQ0BbTU.BV8Rcqu0AnQ7Wm4tHojQzeO81UVB59y','2024-03-14 14:50:53.875');
 
+CREATE TABLE movimento_estoque (
+  id serial primary key,
+  data_entrada timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  numero_nota INT,
+  usuario_id INT NOT NULL REFERENCES usuarios(id),
+  valor_total NUMERIC(12, 2),
+  descricao VARCHAR(255),
+  tipo VARCHAR(255),
+  fornecedor_id INT NOT NULL REFERENCES fornecedores(id),
+  soft_delete BOOLEAN default false
+);
 
 CREATE TABLE vendas (
   id serial primary key,
@@ -177,14 +177,15 @@ CREATE TABLE historico_custo (
   produto_id INT REFERENCES produtos(id),
   valor_custo NUMERIC(12, 2),
   soft_delete BOOLEAN default false,
-  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP
+  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  
 );
 
 CREATE TABLE historico_venda (
   id serial primary key,
   produto_id INT REFERENCES produtos(id),
   valor_venda NUMERIC(12, 2),
-  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP
+  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   soft_delete BOOLEAN default false
 );
 
@@ -192,8 +193,8 @@ CREATE TABLE produto_movimento_estoque (
   id serial primary key,
   produto_id INT REFERENCES produtos(id),
   movimento_estoque_id INT REFERENCES movimento_estoque(id),
-  custo FLOAT,
-  quantidade INT,
+  valor_custo NUMERIC(12, 2),
+  quantidade_produto INT,
   soft_delete BOOLEAN default false,
   create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
