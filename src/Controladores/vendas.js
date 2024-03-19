@@ -7,6 +7,8 @@ const diminuirEstoque = require('../ferramentas/diminuirEstoque')
 const formasDePagamento = require('../ferramentas/formasDePgamento')
 const aumentarEstoque = require('../ferramentas/aumentarEstoque')
 
+const calcularValores = require('../ferramentas/calcularValores')
+
 const cadastrarVenda = async (req, res) => {
     const { lista_produtos, lista_pagamentos, ...dados } = req.body;
     const { cliente_id, pedido_id } = dados
@@ -23,8 +25,6 @@ const cadastrarVenda = async (req, res) => {
                 delete_at: DateTime.now().setZone('America/Sao_Paulo').toISO()
             })
         }
-
-
         if (cliente_id) {
             const clienteValido = await knex('clientes').where({ id: cliente_id, soft_delete: false }).first();
 
@@ -38,7 +38,11 @@ const cadastrarVenda = async (req, res) => {
             return res.status(403).json(resultadoValidacao.mensagem)
         }
 
-        const [cadastroVenda] = await knex('vendas').insert(dados).returning('*')
+        const resultado = await calcularValores(lista_produtos)
+
+        const dadosCompletos = { ...dados, ...resultado }
+
+        const [cadastroVenda] = await knex('vendas').insert(dadosCompletos).returning('*')
 
         const { id: venda_id } = cadastroVenda;
 

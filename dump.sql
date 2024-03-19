@@ -86,8 +86,8 @@ CREATE TABLE movimento_estoque (
 CREATE TABLE vendas (
   id serial primary key,
   cliente_id INT REFERENCES clientes(id),
-  valor_total NUMERIC(12, 2) NOT NULL,
-  custo_total NUMERIC(12, 2) NOT NULL,
+  valor_venda NUMERIC(12, 2) NOT NULL,
+  valor_custo NUMERIC(12, 2) NOT NULL,
   lucro_total NUMERIC(12, 2) NOT NULL,
   desconto_Total NUMERIC(12, 2),
   usuario_id INT NOT NULL REFERENCES usuarios(id),
@@ -100,8 +100,10 @@ CREATE TABLE vendas (
 CREATE TABLE pedidos (
   id serial primary key,
   cliente_id INT REFERENCES clientes(id),
-  valor_total NUMERIC(12, 2) NOT NULL,
-  desconto_total NUMERIC(12, 2),
+  valor_venda NUMERIC(12, 2) NOT NULL,
+  valor_custo NUMERIC(12, 2) NOT NULL,
+  lucro_total NUMERIC(12, 2) NOT NULL,
+  desconto_Total NUMERIC(12, 2),
   usuario_id INT NOT NULL REFERENCES usuarios(id),
   create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   delete_at TIMESTAMP,
@@ -181,8 +183,7 @@ CREATE TABLE historico_custo (
   produto_id INT REFERENCES produtos(id),
   valor_custo NUMERIC(12, 2),
   soft_delete BOOLEAN default false,
-  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  
+  create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP 
 );
 
 CREATE TABLE historico_venda (

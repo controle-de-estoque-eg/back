@@ -39,6 +39,18 @@ const { cadastrarPedido, listarPedido, listarPedidos, excluirPedido } = require(
 
 const { cadastrarEstoque, listarEstoques, listarEstoque, excluirEstoque } = require('./Controladores/estoque')
 
+//relatorio-vendas
+const relatorioVendas = require('./Controladores/relatorios/relatoriosVendas')
+
+//relatorio-produtos
+const produtosEmDestaque = require('./Controladores/relatorios/relatoriosProdutos')
+
+//relatorio-lucro
+const relatorioLucro = require('./Controladores/relatorios/relatoriosLucro')
+
+//relatorio-Estoque
+const relatorioEstoque = require('./Controladores/relatorios/relatoriosEstoque')
+
 //---------------------------Rotas--------------------------------------
 
 //Rotas-Roles
@@ -118,5 +130,17 @@ rotas.post('/estoque', cadastrarEstoque)
 rotas.get('/estoque', listarEstoques)
 rotas.get('/estoque/:id', listarEstoque)
 rotas.delete('/estoque/:id', excluirEstoque)
+
+//Rotas---Relatorios-Vendas
+rotas.get('/relatorio_vendas', relatorioVendas)
+
+//Rotas---Relatorios-Produtos
+rotas.get('/relatorio_produtos', produtosEmDestaque)
+
+//Rotas---Relatorios-Lucro
+rotas.get('/relatorio_lucro', relatorioLucro)
+
+//Rotas---Relatorios-Estoque
+rotas.get('/relatorio_estoque', relatorioEstoque)
 
 module.exports = rotas

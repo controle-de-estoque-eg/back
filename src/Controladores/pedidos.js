@@ -4,6 +4,8 @@ const { DateTime } = require('luxon');
 const validadorProduto = require('../ferramentas/validadorProduto')
 const cadastroPedidoProduto = require('../ferramentas/cadastroPedidoProduto')
 
+const calcularValores = require('../ferramentas/calcularValores')
+
 const cadastrarPedido = async (req, res) => {
     const { lista_produtos, ...dados } = req.body;
     const { cliente_id } = dados
@@ -22,7 +24,11 @@ const cadastrarPedido = async (req, res) => {
             return res.status(403).json(resultadoValidacao.mensagem)
         }
 
-        const [cadastroPedio] = await knex('pedidos').insert(dados).returning('*')
+        const resultado = await calcularValores(lista_produtos)
+
+        const dadosCompletos = { ...dados, ...resultado }
+
+        const [cadastroPedio] = await knex('pedidos').insert(dadosCompletos).returning('*')
 
         const { id: pedido_id } = cadastroPedio;
 
