@@ -8,7 +8,7 @@ app.use(cors())
 app.use(express.json())
 app.use(rotas)
 
-const port = process.env.PORT || 3000
-app.listen(3000, () => {
+const port = process.env.PORT || 3001
+app.listen(3001, () => {
   console.log(`API rodando em: http://localhost:${port}`)
 })
