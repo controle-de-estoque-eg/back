@@ -51,6 +51,18 @@ const relatorioLucro = require('./Controladores/relatorios/relatoriosLucro')
 //relatorio-Estoque
 const relatorioEstoque = require('./Controladores/relatorios/relatoriosEstoque')
 
+//relatorio-Pagamento
+const relatorioPagamento = require('./Controladores/relatorios/relatoriosTipoPg')
+
+//Relatorio-Vendas horario
+const vendasHorario = require('./Controladores/relatorios/relatorioVendasHorario')
+
+//Relatorio-vendas-por-cliente
+const vendasPorCliente = require('./Controladores/relatorios/relattoriovendasPorCliente')
+
+//Relatorio-produtos-categorias
+const relatorioProCat = require('./Controladores/relatorios/relatorioProdutosCategorias')
+
 //---------------------------Rotas--------------------------------------
 
 //Rotas-Roles
@@ -142,5 +154,17 @@ rotas.get('/relatorio_lucro', relatorioLucro)
 
 //Rotas---Relatorios-Estoque
 rotas.get('/relatorio_estoque', relatorioEstoque)
+
+//Rotas---Relatorios-% Pagamentos
+rotas.get('/porcentagem-pagamentos', relatorioPagamento)
+
+//Rotas---Relatorios-Venda horarios
+rotas.get('/vendas-horario', vendasHorario)
+
+//Rotas---vendas-por-cliente
+rotas.get('/vendas-por-cliente', vendasPorCliente)
+
+//Rotas---produtos-categorias
+rotas.get('/produtos-categorias', relatorioProCat)
 
 module.exports = rotas
