@@ -1,6 +1,9 @@
 const express = require("express")
 const rotas = express.Router()
 
+//multer
+const upload = require("./multerConfig")
+
 //autenticacao
 const autenticacao = require("./Intermediarios/autenticacao")
 
@@ -63,6 +66,15 @@ const vendasPorCliente = require('./Controladores/relatorios/relattoriovendasPor
 //Relatorio-produtos-categorias
 const relatorioProCat = require('./Controladores/relatorios/relatorioProdutosCategorias')
 
+//Relatorio-Vendas-Fornecedores
+const relatorioFornecedores = require('./Controladores/relatorios/relatorioFornecedores')
+
+//Relatorio-Vendas-Usuario
+const relatorioVendasPorUsuario = require('./Controladores/relatorios/relatorioVendasPorUsuario')
+
+
+//Alerta-Produtos-Estoque-baixo
+const alertaEstoque = require('./Controladores/alerta/alertaEstoque')
 //---------------------------Rotas--------------------------------------
 
 //Rotas-Roles
@@ -119,7 +131,7 @@ rotas.put('/formas-pagemento/:id', editararformas_pagemento)
 rotas.delete('/formas-pagemento/:id', excluirformas_pagemento)
 
 //Rotas-Produto
-rotas.post('/produto', cadastroProduto)
+rotas.post('/produto', upload.single('file'), cadastroProduto)
 rotas.get('/produto', listarProdutos)
 rotas.get('/produto/:id', listarProduto)
 rotas.put('/produto/:id', editarProduto)
@@ -166,5 +178,14 @@ rotas.get('/vendas-por-cliente', vendasPorCliente)
 
 //Rotas---produtos-categorias
 rotas.get('/produtos-categorias', relatorioProCat)
+
+//Rotas---Vendas-Fornecedores
+rotas.get('/relatorio-fornecedores', relatorioFornecedores)
+
+//Rotas---Vendas-Fornecedores
+rotas.get('/vendas-por-usuario', relatorioVendasPorUsuario)
+
+//Rotas---Produtos-Estoque-baixo
+rotas.get('/produtos-estoque-baixo', alertaEstoque)
 
 module.exports = rotas

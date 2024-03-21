@@ -8,7 +8,7 @@ const calcularValores = require('../ferramentas/calcularValores')
 
 const cadastrarPedido = async (req, res) => {
     const { lista_produtos, ...dados } = req.body;
-    const { cliente_id } = dados
+    const { cliente_id, codigo_de_barras } = dados
     try {
 
         if (cliente_id) {

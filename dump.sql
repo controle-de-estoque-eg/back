@@ -133,6 +133,7 @@ CREATE TABLE produtos (
   valor_custo NUMERIC(12, 2) ,
   valor_venda NUMERIC(12, 2) ,
   quantidade_estoque INT default 0,
+  alerta_estoque INT default 0,
   create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   delete_at TIMESTAMP ,
   update_at TIMESTAMP ,
