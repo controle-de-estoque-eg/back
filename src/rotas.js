@@ -1,46 +1,106 @@
-const express = require("express")
+const express = require('express')
 const rotas = express.Router()
 
 //multer
-const upload = require("./multerConfig")
+const upload = require('./multerConfig')
 
 //autenticacao
-const autenticacao = require("./Intermediarios/autenticacao")
+const autenticacao = require('./Intermediarios/autenticacao')
 
 //Roles
-const { cadatroRotes, listarRotes, deleteRotes } = require("./Controladores/rotes")
+const {
+  cadatroRotes,
+  listarRotes,
+  deleteRotes,
+} = require('./Controladores/rotes')
 
-//Usuarios 
-const { listarUsuarios, listarUsuario, cadastrarUsuario, editararUsuario, excluirUsuario } = require("./Controladores/usuarios")
+//Usuarios
+const {
+  listarUsuarios,
+  listarUsuario,
+  cadastrarUsuario,
+  editararUsuario,
+  excluirUsuario,
+} = require('./Controladores/usuarios')
 
 //login
-const login = require("./Controladores/login")
+const login = require('./Controladores/login')
 
 //Categorias
-const { listarCategorias, listarCategoria, cadastrarCategoria, editararCategoria, excluirCategoria } = require("./Controladores/categoria")
+const {
+  listarCategorias,
+  listarCategoria,
+  cadastrarCategoria,
+  editararCategoria,
+  excluirCategoria,
+} = require('./Controladores/categoria')
 
 //Cliente
-const { cadastrarcliente, listarclientes, listarcliente, editararcliente, excluircliente } = require("./Controladores/cliente")
+const {
+  cadastrarcliente,
+  listarclientes,
+  listarcliente,
+  editararcliente,
+  excluircliente,
+} = require('./Controladores/cliente')
 
 //Fornecedores
-const { cadastrarfornecedor, listarfornecedores, listarfornecedor, editararfornecedor, excluirfornecedor } = require("./Controladores/fornecedor")
+const {
+  cadastrarfornecedor,
+  listarfornecedores,
+  listarfornecedor,
+  editararfornecedor,
+  excluirfornecedor,
+} = require('./Controladores/fornecedor')
 
 //Produtos_Fornecedores
-const { cadastraProdutos_Fornecedores, exlcuirProdutos_Fornecedores, listarProdutos_fornecedores, listarProdutos_fornecedor } = require("./Controladores/produtos_fornecedores")
+const {
+  cadastraProdutos_Fornecedores,
+  exlcuirProdutos_Fornecedores,
+  listarProdutos_fornecedores,
+  listarProdutos_fornecedor,
+} = require('./Controladores/produtos_fornecedores')
 
 //Formas-pagemento
-const { listarformas_pagemento, listarforma_pagemento, cadastrarformas_pagemento, editararformas_pagemento, excluirformas_pagemento } = require("./Controladores/formas-pagemento")
+const {
+  listarformas_pagemento,
+  listarforma_pagemento,
+  cadastrarformas_pagemento,
+  editararformas_pagemento,
+  excluirformas_pagemento,
+} = require('./Controladores/formas-pagemento')
 
 //Produto
-const { cadastroProduto, editarProduto, listarProdutos, listarProduto, excluirProduto } = require('./Controladores/produto')
+const {
+  cadastroProduto,
+  editarProduto,
+  listarProdutos,
+  listarProduto,
+  excluirProduto,
+} = require('./Controladores/produto')
 
 //Vendas
-const { cadastrarVenda, listarVenda, listarVendas, excluirVenda } = require('./Controladores/vendas')
+const {
+  cadastrarVenda,
+  listarVenda,
+  listarVendas,
+  excluirVenda,
+} = require('./Controladores/vendas')
 
 //Pedidos
-const { cadastrarPedido, listarPedido, listarPedidos, excluirPedido } = require('./Controladores/pedidos')
+const {
+  cadastrarPedido,
+  listarPedido,
+  listarPedidos,
+  excluirPedido,
+} = require('./Controladores/pedidos')
 
-const { cadastrarEstoque, listarEstoques, listarEstoque, excluirEstoque } = require('./Controladores/estoque')
+const {
+  cadastrarEstoque,
+  listarEstoques,
+  listarEstoque,
+  excluirEstoque,
+} = require('./Controladores/estoque')
 
 //relatorio-vendas
 const relatorioVendas = require('./Controladores/relatorios/relatoriosVendas')
@@ -72,7 +132,6 @@ const relatorioFornecedores = require('./Controladores/relatorios/relatorioForne
 //Relatorio-Vendas-Usuario
 const relatorioVendasPorUsuario = require('./Controladores/relatorios/relatorioVendasPorUsuario')
 
-
 //Alerta-Produtos-Estoque-baixo
 const alertaEstoque = require('./Controladores/alerta/alertaEstoque')
 //---------------------------Rotas--------------------------------------
@@ -80,13 +139,13 @@ const alertaEstoque = require('./Controladores/alerta/alertaEstoque')
 //Rotas-Roles
 rotas.get('/roles', listarRotes)
 rotas.post('/roles', cadatroRotes)
-rotas.delete('/roles/:id', deleteRotes);
+rotas.delete('/roles/:id', deleteRotes)
 
 //login
 rotas.post('/login', login)
 rotas.post('/usuario', cadastrarUsuario)
 //Autenticação JWT
-rotas.use(autenticacao);
+rotas.use(autenticacao)
 
 //Rotas Protegidas por token -----------------------------------
 
