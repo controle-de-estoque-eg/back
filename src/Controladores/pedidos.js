@@ -6,6 +6,39 @@ const cadastroPedidoProduto = require('../ferramentas/cadastroPedidoProduto')
 
 const calcularValores = require('../ferramentas/calcularValores')
 
+const listarPedido = async (req, res) => {
+    const { id } = req.params
+    try {
+        const pedidos = await knex("pedidos").where({ id, soft_delete: false }).first()
+        if (!pedidos) {
+            return res.status(409).json({
+                mensagem:
+                    'O pedido informado não existe.',
+            });
+        }
+        const lista_produtos = await knex('pedidos_produtos').where({ pedido_id: id })
+
+        const resposta = { ...pedidos, lista_produtos }
+        return (
+            res.status(200).json(resposta)
+        )
+    } catch (error) {
+        return res.status(500).json({ mensagem: error.message });
+    }
+};
+
+const listarPedidos = async (req, res) => {
+    try {
+        const pedidos = await knex('pedidos').where({ soft_delete: false })
+
+        return (
+            res.status(200).json(pedidos)
+        )
+    } catch (error) {
+        return res.status(500).json({ mensagem: error.message });
+    }
+};
+
 const cadastrarPedido = async (req, res) => {
     const { lista_produtos, ...dados } = req.body;
     const { cliente_id, codigo_de_barras } = dados
@@ -44,39 +77,6 @@ const cadastrarPedido = async (req, res) => {
     }
 
 }
-
-const listarPedido = async (req, res) => {
-    const { id } = req.params
-    try {
-        const pedidos = await knex("pedidos").where({ id, soft_delete: false }).first()
-        if (!pedidos) {
-            return res.status(409).json({
-                mensagem:
-                    'O pedido informado não existe.',
-            });
-        }
-        const lista_produtos = await knex('pedidos_produtos').where({ pedido_id: id })
-
-        const resposta = { ...pedidos, lista_produtos }
-        return (
-            res.status(200).json(resposta)
-        )
-    } catch (error) {
-        return res.status(500).json({ mensagem: error.message });
-    }
-};
-
-const listarPedidos = async (req, res) => {
-    try {
-        const pedidos = await knex('pedidos').where({ soft_delete: false })
-
-        return (
-            res.status(200).json(pedidos)
-        )
-    } catch (error) {
-        return res.status(500).json({ mensagem: error.message });
-    }
-};
 
 const excluirPedido = async (req, res) => {
     const { id } = req.params;

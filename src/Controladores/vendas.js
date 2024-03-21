@@ -9,6 +9,39 @@ const aumentarEstoque = require('../ferramentas/aumentarEstoque')
 
 const calcularValores = require('../ferramentas/calcularValores')
 
+const listarVenda = async (req, res) => {
+    const { id } = req.params
+    try {
+        const pedidos = await knex("vendas").where({ id, soft_delete: false }).first()
+        if (!pedidos) {
+            return res.status(409).json({
+                mensagem:
+                    'A venda informado não existe.',
+            });
+        }
+        const lista_produtos = await knex('vendas_produtos').where({ venda_id: id, soft_delete: false })
+
+        const resposta = { ...pedidos, lista_produtos }
+        return (
+            res.status(200).json(resposta)
+        )
+    } catch (error) {
+        return res.status(500).json({ mensagem: error.message });
+    }
+};
+
+const listarVendas = async (req, res) => {
+    try {
+        const vendas = await knex('vendas').where({ soft_delete: false })
+
+        return (
+            res.status(200).json(vendas)
+        )
+    } catch (error) {
+        return res.status(500).json({ mensagem: error.message });
+    }
+};
+
 const cadastrarVenda = async (req, res) => {
     const { lista_produtos, lista_pagamentos, ...dados } = req.body;
     const { cliente_id, pedido_id } = dados
@@ -68,39 +101,6 @@ const cadastrarVenda = async (req, res) => {
         return res.status(500).json({ mensagem: error.message })
     }
 }
-
-const listarVenda = async (req, res) => {
-    const { id } = req.params
-    try {
-        const pedidos = await knex("vendas").where({ id, soft_delete: false }).first()
-        if (!pedidos) {
-            return res.status(409).json({
-                mensagem:
-                    'A venda informado não existe.',
-            });
-        }
-        const lista_produtos = await knex('vendas_produtos').where({ venda_id: id, soft_delete: false })
-
-        const resposta = { ...pedidos, lista_produtos }
-        return (
-            res.status(200).json(resposta)
-        )
-    } catch (error) {
-        return res.status(500).json({ mensagem: error.message });
-    }
-};
-
-const listarVendas = async (req, res) => {
-    try {
-        const vendas = await knex('vendas').where({ soft_delete: false })
-
-        return (
-            res.status(200).json(vendas)
-        )
-    } catch (error) {
-        return res.status(500).json({ mensagem: error.message });
-    }
-};
 
 const excluirVenda = async (req, res) => {
     const { id } = req.params;

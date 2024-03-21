@@ -1,6 +1,36 @@
 const knex = require('../conexao')
 const { DateTime } = require('luxon');
 
+const listarclientes = async (req, res) => {
+    try {
+        const clientes = await knex('clientes').where({ soft_delete: false })
+
+        return (
+            res.status(200).json(clientes)
+        )
+    } catch (error) {
+        return res.status(500).json({ mensagem: error.message });
+    }
+}
+
+const listarcliente = async (req, res) => {
+    const { id } = req.params
+    try {
+        const cliente = await knex("clientes").where({ id, soft_delete: false }).first()
+        if (!cliente) {
+            return res.status(409).json({
+                mensagem:
+                    'O cliente informado não existe.',
+            });
+        }
+        return (
+            res.status(200).json(cliente)
+        )
+    } catch (error) {
+        return res.status(500).json({ mensagem: error.message });
+    }
+}
+
 const cadastrarcliente = async (req, res) => {
     const dados = { ...req.body }
     const { email, cpf } = dados
@@ -27,34 +57,6 @@ const cadastrarcliente = async (req, res) => {
     }
 }
 
-const listarclientes = async (req, res) => {
-    try {
-        const clientes = await knex('clientes').where({ soft_delete: false })
-
-        return (
-            res.status(200).json(clientes)
-        )
-    } catch (error) {
-        return res.status(500).json({ mensagem: error.message });
-    }
-}
-const listarcliente = async (req, res) => {
-    const { id } = req.params
-    try {
-        const cliente = await knex("clientes").where({ id, soft_delete: false }).first()
-        if (!cliente) {
-            return res.status(409).json({
-                mensagem:
-                    'O cliente informado não existe.',
-            });
-        }
-        return (
-            res.status(200).json(cliente)
-        )
-    } catch (error) {
-        return res.status(500).json({ mensagem: error.message });
-    }
-}
 const editararcliente = async (req, res) => {
     const { id } = req.params
     const dados = { ...req.body }
@@ -95,6 +97,7 @@ const editararcliente = async (req, res) => {
         return res.status(500).json({ mensagem: error.message });
     }
 }
+
 const excluircliente = async (req, res) => {
     const { id } = req.params
 

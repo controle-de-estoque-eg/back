@@ -1,9 +1,9 @@
 const knex = require('../conexao')
 
-const cadatroRotes = async (req, res) => {
-    const { nome } = req.body
+const listarRotes = async (req, res) => {
+
     try {
-        const roles = await knex("roles").insert({ nome }).returning("*")
+        const roles = await knex("roles").where({ soft_delete: false })
         return (
             res.status(200).json(roles)
         )
@@ -12,10 +12,10 @@ const cadatroRotes = async (req, res) => {
     }
 }
 
-const listarRotes = async (req, res) => {
-
+const cadatroRotes = async (req, res) => {
+    const { nome } = req.body
     try {
-        const roles = await knex("roles").where({ soft_delete: false })
+        const roles = await knex("roles").insert({ nome }).returning("*")
         return (
             res.status(200).json(roles)
         )

@@ -1,32 +1,6 @@
 const knex = require('../conexao');
 const { DateTime } = require('luxon');
 
-const cadastraProdutos_Fornecedores = async (req, res) => {
-    const { lista_produtos, fornecedor_id } = req.body;
-    try {
-        const fornecedor = await knex('fornecedores').where({ id: fornecedor_id, soft_delete: false }).first();
-
-        if (!fornecedor) {
-            return res.status(404).json({ mensagem: 'O fornecedor informado não existe.' });
-        }
-
-        const produtosCadastrados = [];
-
-        await Promise.all(lista_produtos.map(async (elemento) => {
-            const pedidoProduto = {
-                produto_id: elemento.produto_id,
-                fornecedor_id
-            };
-            const produto = await knex('produtos_fornecedores').insert(pedidoProduto).returning("*");
-            produtosCadastrados.push(...produto);
-        }));
-
-        return res.status(201).json(produtosCadastrados);
-    } catch (error) {
-        return res.status(500).json({ mensagem: error.message });
-    }
-};
-
 const listarProdutos_fornecedores = async (req, res) => {
     try {
         const produtos_fornecedores = await knex('produtos_fornecedores').where({ soft_delete: false });
@@ -68,6 +42,31 @@ const listarProdutos_fornecedor = async (req, res) => {
     }
 }
 
+const cadastraProdutos_Fornecedores = async (req, res) => {
+    const { lista_produtos, fornecedor_id } = req.body;
+    try {
+        const fornecedor = await knex('fornecedores').where({ id: fornecedor_id, soft_delete: false }).first();
+
+        if (!fornecedor) {
+            return res.status(404).json({ mensagem: 'O fornecedor informado não existe.' });
+        }
+
+        const produtosCadastrados = [];
+
+        await Promise.all(lista_produtos.map(async (elemento) => {
+            const pedidoProduto = {
+                produto_id: elemento.produto_id,
+                fornecedor_id
+            };
+            const produto = await knex('produtos_fornecedores').insert(pedidoProduto).returning("*");
+            produtosCadastrados.push(...produto);
+        }));
+
+        return res.status(201).json(produtosCadastrados);
+    } catch (error) {
+        return res.status(500).json({ mensagem: error.message });
+    }
+};
 
 const exlcuirProdutos_Fornecedores = async (req, res) => {
     const { lista_produtos } = req.body;
