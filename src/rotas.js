@@ -134,7 +134,7 @@ rotas.delete('/formas-pagemento/:id', excluirformas_pagemento)
 rotas.post('/produto', upload.single('file'), cadastroProduto)
 rotas.get('/produto', listarProdutos)
 rotas.get('/produto/:id', listarProduto)
-rotas.put('/produto/:id', editarProduto)
+rotas.put('/produto/:id', upload.single('file'), editarProduto)
 rotas.delete('/produto/:id', excluirProduto)
 
 //Rotas-Vendas

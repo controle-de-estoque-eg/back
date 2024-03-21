@@ -1,7 +1,7 @@
 const knex = require("../conexao")
 const { DateTime } = require('luxon');
 
-const salvarArquivoLocal = require("../armazenamento")
+const { salvarArquivoLocal, editarImagem, excluir } = require("../armazenamento")
 
 const cadastroProduto = async (req, res) => {
     const dados = { ...req.body }
@@ -44,16 +44,20 @@ const cadastroProduto = async (req, res) => {
         if (valor_venda) {
             await knex('historico_venda').insert({ produto_id: novoproduto[0].id, valor_venda })
         }
+        if (req.file) {
+            const id = novoproduto[0].id
 
-        const id = novoproduto[0].id
+            const caminhoArquivo = salvarArquivoLocal(id, req);
 
-        const caminhoArquivo = salvarArquivoLocal(id, req);
+            let produto = await knex('produtos').update({ imagem: caminhoArquivo }).where({ id }).returning('*')
 
-        produto = await knex('produtos').update({ imagem: caminhoArquivo }).where({ id }).returning('*')
+            produto[0].urlImagem = caminhoArquivo
 
-        novoproduto[0].urlImagem = caminhoArquivo
+            return res.status(201).json(produto[0])
+        }
 
-        return res.status(201).json(novoproduto[0])
+        return res.status(200).json(novoproduto[0])
+
     } catch (error) {
         return res.status(500).json({ mensagem: error.message })
     }
@@ -71,39 +75,37 @@ const editarProduto = async (req, res) => {
             return res.status(404).json({ mensagem: 'O Produto não foi encontrado' });
         }
 
-        const codigoValido = await knex('produtos').where({ codigo_de_barras, soft_delete: false }).first()
-        if (codigoValido && codigoValido.id != id) {
-            return res.status(409).json({
-                mensagem:
-                    'Ja existe um produto com esse codigo de barras'
-            });
+        if (codigo_de_barras) {
+            const codigoValido = await knex('produtos').where({ codigo_de_barras, soft_delete: false }).first()
+            if (codigoValido && codigoValido.id != id) {
+                return res.status(409).json({
+                    mensagem:
+                        'Ja existe um produto com esse codigo de barras'
+                });
+            }
+
         }
 
-        const nomeavalida = await knex('produtos').where({ nome, soft_delete: false }).first()
-        if (nomeavalida && nomeavalida.id != id) {
-            return res.status(409).json({
-                mensagem:
-                    'Ja existe um produto com esse nome'
-            });
+        if (nome) {
+            const nomeavalida = await knex('produtos').where({ nome, soft_delete: false }).first()
+            if (nomeavalida && nomeavalida.id != id) {
+                return res.status(409).json({
+                    mensagem:
+                        'Ja existe um produto com esse nome'
+                });
+            }
         }
 
-        const categoriavalida = await knex('categorias').where({ id: categoria_id, soft_delete: false }).first()
+        if (categoria_id) {
+            const categoriavalida = await knex('categorias').where({ id: categoria_id, soft_delete: false }).first()
 
-        if (!categoriavalida) {
-            return res.status(409).json({
-                mensagem:
-                    'A categoria informado não existe.'
-            });
+            if (!categoriavalida) {
+                return res.status(409).json({
+                    mensagem:
+                        'A categoria informado não existe.'
+                });
+            }
         }
-        if (!req.file) {
-            return res.status(400).json({ error: 'Imagem do produto é obrigatória' });
-        }
-
-        const imagePath = req.file.path;
-
-        const dadosCompletos = { ...dados, update_at: DateTime.now().setZone('America/Sao_Paulo').toISO(), imagePath }
-
-        const produtoAtualizado = await knex('produtos').update(dadosCompletos).where({ id }).returning('*')
 
         if (valor_custo) {
             await knex('historico_custo').insert({ produto_id: produtoAtualizado[0].id, valor_custo })
@@ -112,6 +114,21 @@ const editarProduto = async (req, res) => {
         if (valor_venda) {
             await knex('historico_venda').insert({ produto_id: produtoAtualizado[0].id, valor_venda })
         }
+
+        const dadosCompletos = { ...dados, update_at: DateTime.now().setZone('America/Sao_Paulo').toISO() }
+
+        const produtoAtualizado = await knex('produtos').update(dadosCompletos).where({ id }).returning('*')
+
+        if (req.file) {
+            const caminhoArquivo = editarImagem(id, req);
+
+            let produto = await knex('produtos').update({ imagem: caminhoArquivo }).where({ id }).returning('*')
+
+            produto[0].urlImagem = caminhoArquivo
+
+            return res.status(201).json(produto[0])
+        }
+
 
         return res.status(200).json(produtoAtualizado[0])
 
@@ -162,6 +179,7 @@ const excluirProduto = async (req, res) => {
             delete_at: DateTime.now().setZone('America/Sao_Paulo').toISO()
         }).returning('*');
 
+        excluir(id)
         return res.status(204).json()
 
     } catch (error) {
