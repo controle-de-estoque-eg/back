@@ -1,10 +1,47 @@
 const knex = require('../conexao')
-const { DateTime } = require('luxon')
 
 const cadastrarEstoqueProduto = require('../ferramentas/cadastrarEstoque')
 const aumentarEstoque = require('../ferramentas/aumentarEstoque')
 const diminuirEstoque = require('../ferramentas/diminuirEstoque')
 
+const listarEstoques = async (req, res) => {
+  const page = parseInt(req.query.page) || 1; // Página atual, padrão para 1 se não for especificada
+  const limit = parseInt(req.query.limit) || 10; // Número de itens por página, padrão para 10 se não for especificado
+
+  try {
+    const offset = (page - 1) * limit; // Offset para a consulta no banco de dados
+    const estoques = await knex('movimento_estoque')
+      .where({ soft_delete: false })
+      .offset(offset)
+      .limit(limit);
+
+    return res.status(200).json(estoques);
+  } catch (error) {
+    return res.status(500).json({ mensagem: error.message });
+  }
+}
+const listarEstoque = async (req, res) => {
+  const { id } = req.params
+  try {
+    const estoque = await knex('movimento_estoque')
+      .where({ id, soft_delete: false })
+      .first()
+    if (!estoque) {
+      return res.status(409).json({
+        mensagem: 'O Movimento de estoque informado não existe.',
+      })
+    }
+    const lista_produtos = await knex('produto_movimento_estoque').where({
+      movimento_estoque_id: id,
+      soft_delete: false,
+    })
+
+    const resposta = { ...estoque, lista_produtos }
+    return res.status(200).json(resposta)
+  } catch (error) {
+    return res.status(500).json({ mensagem: error.message })
+  }
+}
 const cadastrarEstoque = async (req, res) => {
   const { lista_produtos, ...dados } = req.body
   const { fornecedor_id, tipo } = dados
@@ -57,42 +94,6 @@ const cadastrarEstoque = async (req, res) => {
     return res.status(500).json({ mensagem: error.message })
   }
 }
-
-const listarEstoques = async (req, res) => {
-  try {
-    const estoques = await knex('movimento_estoque').where({
-      soft_delete: false,
-    })
-
-    return res.status(200).json(estoques)
-  } catch (error) {
-    return res.status(500).json({ mensagem: error.message })
-  }
-}
-
-const listarEstoque = async (req, res) => {
-  const { id } = req.params
-  try {
-    const estoque = await knex('movimento_estoque')
-      .where({ id, soft_delete: false })
-      .first()
-    if (!estoque) {
-      return res.status(409).json({
-        mensagem: 'O Movimento de estoque informado não existe.',
-      })
-    }
-    const lista_produtos = await knex('produto_movimento_estoque').where({
-      movimento_estoque_id: id,
-      soft_delete: false,
-    })
-
-    const resposta = { ...estoque, lista_produtos }
-    return res.status(200).json(resposta)
-  } catch (error) {
-    return res.status(500).json({ mensagem: error.message })
-  }
-}
-
 const excluirEstoque = async (req, res) => {
   const { id } = req.params
   try {

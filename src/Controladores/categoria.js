@@ -2,14 +2,21 @@ const knex = require('../conexao')
 const { DateTime } = require('luxon')
 
 const listarCategorias = async (req, res) => {
+  const page = parseInt(req.query.page) || 1; // Página atual, padrão para 1 se não for especificada
+  const limit = parseInt(req.query.limit) || 10; // Número de itens por página, padrão para 10 se não for especificado
+
   try {
-    const categorias = await knex('categorias').where({ soft_delete: false })
-    return res.status(200).json(categorias)
+    const offset = (page - 1) * limit; // Offset para a consulta no banco de dados
+    const categorias = await knex('categorias')
+      .where({ soft_delete: false })
+      .offset(offset)
+      .limit(limit);
+
+    return res.status(200).json(categorias);
   } catch (error) {
-    return res.status(500).json({ mensagem: error.message })
+    return res.status(500).json({ mensagem: error.message });
   }
 }
-
 const listarCategoria = async (req, res) => {
   const { id } = req.params
   try {
@@ -26,7 +33,6 @@ const listarCategoria = async (req, res) => {
     return res.status(500).json({ mensagem: error.message })
   }
 }
-
 const cadastrarCategoria = async (req, res) => {
   const { nome, descricao } = req.body
   try {
@@ -47,7 +53,6 @@ const cadastrarCategoria = async (req, res) => {
     return res.status(500).json({ mensagem: error })
   }
 }
-
 const editararCategoria = async (req, res) => {
   const { nome, descricao } = req.body
   const { id } = req.params
@@ -75,7 +80,6 @@ const editararCategoria = async (req, res) => {
     return res.status(500).json({ mensagem: error.message })
   }
 }
-
 const excluirCategoria = async (req, res) => {
   const { id } = req.params
 

@@ -7,6 +7,42 @@ const {
   excluir,
 } = require('../armazenamento')
 
+const listarProdutos = async (req, res) => {
+  const page = parseInt(req.query.page) || 1; // Página atual, padrão para 1 se não for especificada
+  const limit = parseInt(req.query.limit) || 10; // Número de itens por página, padrão para 10 se não for especificado
+
+  try {
+    const offset = (page - 1) * limit; // Offset para a consulta no banco de dados
+    const listaProdutos = await knex("produtos")
+      .where({ soft_delete: false })
+      .offset(offset)
+      .limit(limit);
+
+    return res.status(200).json(listaProdutos);
+
+  } catch (error) {
+    return res.status(500).json({ mensagem: error.message });
+  }
+};
+
+
+const listarProduto = async (req, res) => {
+  const { id } = req.params
+  try {
+    const detalharProduto = await knex('produtos')
+      .where({ id, soft_delete: false })
+      .first()
+
+    if (!detalharProduto) {
+      return res.status(404).json({ mensagem: 'O Produto não foi encontrado' })
+    }
+
+    return res.status(200).json(detalharProduto)
+  } catch (error) {
+    return res.status(500).json({ mensagem: error.message })
+  }
+}
+
 const cadastroProduto = async (req, res) => {
   const dados = { ...req.body }
   const { nome, categoria_id, valor_custo, valor_venda, codigo_de_barras } =
@@ -171,32 +207,6 @@ const editarProduto = async (req, res) => {
     }
 
     return res.status(200).json(produtoAtualizado[0])
-  } catch (error) {
-    return res.status(500).json({ mensagem: error.message })
-  }
-}
-
-const listarProdutos = async (req, res) => {
-  try {
-    const listaProdutos = await knex('produtos').where({ soft_delete: false })
-    return res.status(200).json(listaProdutos)
-  } catch (error) {
-    return res.status(500).json({ mensagem: error.message })
-  }
-}
-
-const listarProduto = async (req, res) => {
-  const { id } = req.params
-  try {
-    const detalharProduto = await knex('produtos')
-      .where({ id, soft_delete: false })
-      .first()
-
-    if (!detalharProduto) {
-      return res.status(404).json({ mensagem: 'O Produto não foi encontrado' })
-    }
-
-    return res.status(200).json(detalharProduto)
   } catch (error) {
     return res.status(500).json({ mensagem: error.message })
   }

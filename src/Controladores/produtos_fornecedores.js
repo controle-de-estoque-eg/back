@@ -1,6 +1,59 @@
 const knex = require('../conexao')
 const { DateTime } = require('luxon')
 
+const listarProdutos_fornecedores = async (req, res) => {
+  const page = parseInt(req.query.page) || 1; // Página atual, padrão para 1 se não for especificada
+  const limit = parseInt(req.query.limit) || 10; // Número de itens por página, padrão para 10 se não for especificado
+
+  try {
+    const produtosFornecedores = await knex('produtos_fornecedores')
+      .where({ soft_delete: false })
+      .offset((page - 1) * limit)
+      .limit(limit);
+
+    if (!produtosFornecedores || produtosFornecedores.length === 0) {
+      return res.status(404).json({ mensagem: 'Nenhum fornecedor tem produtos cadastrados.' });
+    }
+
+    const produtosPorFornecedor = produtosFornecedores.reduce((acc, produto) => {
+      const { fornecedor_id } = produto;
+      const fornecedorExistente = acc.find(item => item.fornecedor_id === fornecedor_id);
+      if (fornecedorExistente) {
+        fornecedorExistente.produtos.push(produto);
+      } else {
+        acc.push({ fornecedor_id, produtos: [produto] });
+      }
+      return acc;
+    }, []);
+
+    return res.status(200).json(produtosPorFornecedor);
+  } catch (error) {
+    return res.status(500).json({ mensagem: error.message });
+  }
+};
+
+
+const listarProdutos_fornecedor = async (req, res) => {
+  const { id } = req.params
+  try {
+    const produtos_fornecedores = await knex('produtos_fornecedores').where({
+      fornecedor_id: id,
+      soft_delete: false,
+    })
+
+    if (!produtos_fornecedores) {
+      return res
+        .status(404)
+        .json({
+          mensagem: 'O fornecedor informado não tem produtos cadastrados.',
+        })
+    }
+    return res.status(200).json(produtos_fornecedores)
+  } catch (error) {
+    return res.status(500).json({ mensagem: error.message })
+  }
+}
+
 const cadastraProdutos_Fornecedores = async (req, res) => {
   const { lista_produtos, fornecedor_id } = req.body
   try {
@@ -30,61 +83,6 @@ const cadastraProdutos_Fornecedores = async (req, res) => {
     )
 
     return res.status(201).json(produtosCadastrados)
-  } catch (error) {
-    return res.status(500).json({ mensagem: error.message })
-  }
-}
-
-const listarProdutos_fornecedores = async (req, res) => {
-  try {
-    const produtos_fornecedores = await knex('produtos_fornecedores').where({
-      soft_delete: false,
-    })
-
-    if (!produtos_fornecedores || produtos_fornecedores.length === 0) {
-      return res
-        .status(404)
-        .json({ mensagem: 'Nenhum fornecedor tem produtos cadastrados.' })
-    }
-
-    const produtosPorFornecedor = produtos_fornecedores.reduce(
-      (acc, produto) => {
-        const { fornecedor_id } = produto
-        const fornecedorExistente = acc.find(
-          (item) => item.fornecedor_id === fornecedor_id
-        )
-        if (fornecedorExistente) {
-          fornecedorExistente.produtos.push(produto)
-        } else {
-          acc.push({ fornecedor_id, produtos: [produto] })
-        }
-        return acc
-      },
-      []
-    )
-
-    return res.status(200).json(produtosPorFornecedor)
-  } catch (error) {
-    return res.status(500).json({ mensagem: error.message })
-  }
-}
-
-const listarProdutos_fornecedor = async (req, res) => {
-  const { id } = req.params
-  try {
-    const produtos_fornecedores = await knex('produtos_fornecedores').where({
-      fornecedor_id: id,
-      soft_delete: false,
-    })
-
-    if (!produtos_fornecedores) {
-      return res
-        .status(404)
-        .json({
-          mensagem: 'O fornecedor informado não tem produtos cadastrados.',
-        })
-    }
-    return res.status(200).json(produtos_fornecedores)
   } catch (error) {
     return res.status(500).json({ mensagem: error.message })
   }

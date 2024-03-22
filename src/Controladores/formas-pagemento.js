@@ -2,16 +2,21 @@ const knex = require('../conexao')
 const { DateTime } = require('luxon')
 
 const listarformas_pagemento = async (req, res) => {
+  const page = parseInt(req.query.page) || 1; // Página atual, padrão para 1 se não for especificada
+  const limit = parseInt(req.query.limit) || 10; // Número de itens por página, padrão para 10 se não for especificado
+
   try {
-    const formas_pagamento = await knex('formas_pagamento').where({
-      soft_delete: false,
-    })
-    return res.status(200).json(formas_pagamento)
+    const offset = (page - 1) * limit; // Offset para a consulta no banco de dados
+    const formasPagamento = await knex('formas_pagamento')
+      .where({ soft_delete: false })
+      .offset(offset)
+      .limit(limit);
+
+    return res.status(200).json(formasPagamento);
   } catch (error) {
-    return res.status(500).json({ mensagem: error.message })
+    return res.status(500).json({ mensagem: error.message });
   }
 }
-
 const listarforma_pagemento = async (req, res) => {
   const { id } = req.params
   try {

@@ -6,6 +6,44 @@ const cadastroPedidoProduto = require('../ferramentas/cadastroPedidoProduto')
 
 const calcularValores = require('../ferramentas/calcularValores')
 
+const listarPedidos = async (req, res) => {
+  const page = parseInt(req.query.page) || 1; // Página atual, padrão para 1 se não for especificada
+  const limit = parseInt(req.query.limit) || 10; // Número de itens por página, padrão para 10 se não for especificado
+
+  try {
+    const offset = (page - 1) * limit; // Offset para a consulta no banco de dados
+    const pedidos = await knex('pedidos')
+      .where({ soft_delete: false })
+      .offset(offset)
+      .limit(limit);
+
+    return res.status(200).json(pedidos);
+  } catch (error) {
+    return res.status(500).json({ mensagem: error.message });
+  }
+};
+
+const listarPedido = async (req, res) => {
+  const { id } = req.params
+  try {
+    const pedidos = await knex('pedidos')
+      .where({ id, soft_delete: false })
+      .first()
+    if (!pedidos) {
+      return res.status(409).json({
+        mensagem: 'O pedido informado não existe.',
+      })
+    }
+    const lista_produtos = await knex('pedidos_produtos').where({
+      pedido_id: id,
+    })
+
+    const resposta = { ...pedidos, lista_produtos }
+    return res.status(200).json(resposta)
+  } catch (error) {
+    return res.status(500).json({ mensagem: error.message })
+  }
+}
 const cadastrarPedido = async (req, res) => {
   const { lista_produtos, ...dados } = req.body
   const { cliente_id, codigo_de_barras } = dados
@@ -50,39 +88,6 @@ const cadastrarPedido = async (req, res) => {
     return res.status(500).json({ mensagem: error.message })
   }
 }
-
-const listarPedido = async (req, res) => {
-  const { id } = req.params
-  try {
-    const pedidos = await knex('pedidos')
-      .where({ id, soft_delete: false })
-      .first()
-    if (!pedidos) {
-      return res.status(409).json({
-        mensagem: 'O pedido informado não existe.',
-      })
-    }
-    const lista_produtos = await knex('pedidos_produtos').where({
-      pedido_id: id,
-    })
-
-    const resposta = { ...pedidos, lista_produtos }
-    return res.status(200).json(resposta)
-  } catch (error) {
-    return res.status(500).json({ mensagem: error.message })
-  }
-}
-
-const listarPedidos = async (req, res) => {
-  try {
-    const pedidos = await knex('pedidos').where({ soft_delete: false })
-
-    return res.status(200).json(pedidos)
-  } catch (error) {
-    return res.status(500).json({ mensagem: error.message })
-  }
-}
-
 const excluirPedido = async (req, res) => {
   const { id } = req.params
   try {

@@ -1,6 +1,39 @@
 const knex = require('../conexao')
 const { DateTime } = require('luxon')
 
+
+const listarfornecedores = async (req, res) => {
+  const page = parseInt(req.query.page) || 1; // Página atual, padrão para 1 se não for especificada
+  const limit = parseInt(req.query.limit) || 10; // Número de itens por página, padrão para 10 se não for especificado
+
+  try {
+    const offset = (page - 1) * limit; // Offset para a consulta no banco de dados
+    const fornecedores = await knex('fornecedores')
+      .where({ soft_delete: false })
+      .offset(offset)
+      .limit(limit);
+
+    return res.status(200).json(fornecedores);
+  } catch (error) {
+    return res.status(500).json({ mensagem: error.message });
+  }
+}
+const listarfornecedor = async (req, res) => {
+  const { id } = req.params
+  try {
+    const fornecedor = await knex('fornecedores')
+      .where({ id, soft_delete: false })
+      .first()
+    if (!fornecedor) {
+      return res.status(409).json({
+        mensagem: 'O fornecedor informado não existe.',
+      })
+    }
+    return res.status(200).json(fornecedor)
+  } catch (error) {
+    return res.status(500).json({ mensagem: error.message })
+  }
+}
 const cadastrarfornecedor = async (req, res) => {
   const dados = { ...req.body }
   const { nome, email, documento, telefone } = dados
@@ -54,33 +87,6 @@ const cadastrarfornecedor = async (req, res) => {
       .returning('*')
 
     return res.status(201).json(novofornecedor[0])
-  } catch (error) {
-    return res.status(500).json({ mensagem: error.message })
-  }
-}
-
-const listarfornecedores = async (req, res) => {
-  try {
-    const fornecedores = await knex('fornecedores').where({
-      soft_delete: false,
-    })
-    return res.status(200).json(fornecedores)
-  } catch (error) {
-    return res.status(500).json({ mensagem: error.message })
-  }
-}
-const listarfornecedor = async (req, res) => {
-  const { id } = req.params
-  try {
-    const fornecedor = await knex('fornecedores')
-      .where({ id, soft_delete: false })
-      .first()
-    if (!fornecedor) {
-      return res.status(409).json({
-        mensagem: 'O fornecedor informado não existe.',
-      })
-    }
-    return res.status(200).json(fornecedor)
   } catch (error) {
     return res.status(500).json({ mensagem: error.message })
   }
