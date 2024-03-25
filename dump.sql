@@ -12,7 +12,7 @@ VALUES ('adm');
 CREATE TABLE categorias (
   id serial primary key,
   nome VARCHAR(255) NOT NULL,
-  descricao VARCHAR(255) NOT NULL,
+  descricao VARCHAR(255) ,
   create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
   delete_at TIMESTAMP ,
   update_at TIMESTAMP,
@@ -22,7 +22,7 @@ CREATE TABLE categorias (
 CREATE TABLE fornecedores (
   id serial primary key,
   nome VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL UNIQUE,
+  email VARCHAR(255) UNIQUE,
   telefone INT NOT NULL,
   documento INT ,
   create_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,

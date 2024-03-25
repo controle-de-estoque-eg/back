@@ -1,6 +1,6 @@
 const knex = require('../conexao')
 const jwt = require('jsonwebtoken')
-const senhaJwt = process.env.SENHA_JWT
+const senhaJwt = "23937467230847623hbsdhjcvbzxdojhcvbae8sftq3486"
 
 const autenticacao = async (req, res, next) => {
   const bearerToken = req.headers.authorization

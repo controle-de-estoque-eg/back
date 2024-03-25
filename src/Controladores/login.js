@@ -1,7 +1,7 @@
 const knex = require('../conexao')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-const senhaJwt = process.env.SENHA_JWT
+const senhaJwt = "23937467230847623hbsdhjcvbzxdojhcvbae8sftq3486"
 
 const login = async (req, res) => {
   const { email, senha } = req.body
